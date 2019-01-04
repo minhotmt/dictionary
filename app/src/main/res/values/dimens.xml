@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_word">50dp</dimen>
+    <dimen name="height_search">50dp</dimen>
+    <dimen name="height_translate">150dp</dimen>
+    <dimen name="width_word">315dp</dimen>
+    <dimen name="width_edittext">305dp</dimen>
+    <dimen name="img_favorite">30dp</dimen>
+    <dimen name="img_app">40dp</dimen>
+    <dimen name="img_bubble">60dp</dimen>
+    <dimen name="img_cancel">50dp</dimen>
+    <dimen name="margin">15dp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="word_size">20sp</dimen>
+    <dimen name="padding_left">20dp</dimen>
+    <dimen name="padding">10dp</dimen>
+</resources>

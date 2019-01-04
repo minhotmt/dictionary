@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="txt_small">14sp</dimen>
+    <dimen name="txt_normal">16sp</dimen>
+    <dimen name="txt_big3">60sp</dimen>
+    <dimen name="txt_big4">42sp</dimen>
+    <dimen name="txt_big2">30sp</dimen>
+    <dimen name="txt_big">18sp</dimen>
+    
+    <dimen name="iconsize_big">60dp</dimen>
+    <dimen name="iconsize_normal">45dp</dimen>
+    <dimen name="iconsize_small">30dp</dimen>
+    <dimen name="iconsize_tiny">25dp</dimen>
+    
+    <dimen name="toolbar_height">45dp</dimen>
+
+    <dimen name="tab_bottom_height">55dp</dimen>
+    
+    <dimen name="item_padding">6dp</dimen>
+    <dimen name="height_view">2dp</dimen>
+    <dimen name="root_padding">12dp</dimen>
+
+    <dimen name="half_vertical">230dp</dimen>
+    
+    <dimen name="menu_width">270dp</dimen>
+    <dimen name="menu_icon_size">25dp</dimen>
+
+
+    <dimen name="image_height">200dp</dimen>
+    <dimen name="margin_top">10dp</dimen>
+    <dimen name="margin_top_button">20dp</dimen>
+    <dimen name="lnn_height">100dp</dimen>
+    <dimen name="width_button">150dp</dimen>
+    <dimen name="width_dialog">301dp</dimen>
+    <dimen name="img_size">120dp</dimen>
+
+
+    <dimen name="width_word">290dp</dimen>
+    <dimen name="width_edittext">290dp</dimen>
+
+</resources>

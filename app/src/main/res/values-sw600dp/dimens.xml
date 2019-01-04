@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="width_word">520dp</dimen>
+    <dimen name="width_edittext">520dp</dimen>
+</resources>

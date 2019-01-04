@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="txt_small">26sp</dimen>
+    <dimen name="txt_normal">32sp</dimen>
+    <dimen name="txt_big">40sp</dimen>
+    <dimen name="txt_big2">56sp</dimen>
+    <dimen name="txt_big3">120sp</dimen>
+    <dimen name="txt_big4">96sp</dimen>
+    
+    <dimen name="iconsize_big">120dp</dimen>
+    <dimen name="iconsize_normal">90dp</dimen>
+    <dimen name="iconsize_small">60dp</dimen>
+    <dimen name="iconsize_tiny">60dp</dimen>
+    
+    <dimen name="item_padding">18dp</dimen>
+    <dimen name="height_view">5dp</dimen>
+    <dimen name="root_padding">25dp</dimen>
+    
+    <dimen name="toolbar_height">90dp</dimen>
+    <dimen name="tab_bottom_height">105dp</dimen>
+    
+    <dimen name="menu_width">520dp</dimen>
+    <dimen name="menu_icon_size">50dp</dimen>
+
+
+    <dimen name="image_height">400dp</dimen>
+
+    <dimen name="margin_top_button">40dp</dimen>
+    <dimen name="lnn_height">200dp</dimen>
+    <dimen name="width_button">300dp</dimen>
+    <dimen name="width_dialog">302dp</dimen>
+    <dimen name="img_size">240dp</dimen>
+
+    <dimen name="width_word">680dp</dimen>
+    <dimen name="width_edittext">680dp</dimen>
+    
+</resources>

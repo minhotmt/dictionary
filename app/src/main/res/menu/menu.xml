@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:checked="true"
+            android:icon="@drawable/icon_home"
+            android:title="@string/home" />
+    </group>
+
+
+    <item android:title="Grammar">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nouns"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/nouns" />
+                <item
+                    android:id="@+id/article"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/article" />
+                <item
+                    android:id="@+id/pronoun"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/pronoun" />
+                <item
+                    android:id="@+id/numberal"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/numberal" />
+                <item
+                    android:id="@+id/adjective"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/adjective" />
+                <item
+                    android:id="@+id/adverb"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/adverb" />
+                <item
+                    android:id="@+id/verb"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/verb" />
+                <item
+                    android:id="@+id/preposition"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/preposition" />
+                <item
+                    android:id="@+id/conjunction"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/conjunction" />
+                <item
+                    android:id="@+id/particles"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/particles" />
+                <item
+                    android:id="@+id/interjection"
+                    android:icon="@drawable/ic_abc"
+                    android:title="@string/interjection" />
+
+            </group>
+        </menu>
+    </item>
+    <item android:title="PhraseBook">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_book1"
+                    android:icon="@drawable/icon_book"
+                    android:title="@string/book1" />
+                <item
+                    android:id="@+id/nav_book2"
+                    android:icon="@drawable/icon_book"
+                    android:title="@string/book2" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="Other">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/nav_fast"
+                    android:icon="@drawable/icon_fast"
+                    android:title="@string/fast_key" />
+
+                <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/ic_share"
+                    android:title="@string/share" />
+                <item
+                    android:id="@+id/nav_feedback"
+                    android:icon="@drawable/icon_feedback"
+                    android:title="@string/feedback" />
+                <!--<item-->
+                    <!--android:id="@+id/nav_about"-->
+                    <!--android:icon="@drawable/ic_about"-->
+                    <!--android:title="@string/about" />-->
+                <item
+                    android:id="@+id/nav_rate"
+                    android:icon="@drawable/ic_rate"
+                    android:title="@string/rate" />
+
+            </group>
+        </menu>
+    </item>
+</menu>

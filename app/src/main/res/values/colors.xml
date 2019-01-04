@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="color_orange">#f1c40f</color>
+    <color name="bgBottomNavigation">#fe485a</color>
+    <color name="white">#fff</color>
+    <color name="tabs">#888</color>
+</resources>
