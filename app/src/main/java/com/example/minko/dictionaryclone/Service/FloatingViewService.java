@@ -3,6 +3,7 @@ package com.example.minko.dictionaryclone.Service;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,18 +33,28 @@ public class FloatingViewService extends Service {
         //Inflate the floating view layout we created
         mFloatingView = LayoutInflater.from(this).inflate(R.layout.widget_fast, null);
 
+
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
+
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                LAYOUT_FLAG,
+
+//                WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
         //Specify the view position
         params.gravity = Gravity.TOP | Gravity.LEFT;        //Initially view will be added to top-left corner
-        params.x = 0;
-        params.y = 100;
+//        params.x = 0;
+//        params.y = 100;
 
         //Add the view to the window
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -63,8 +74,6 @@ public class FloatingViewService extends Service {
                 stopSelf();
             }
         });
-
-
 
 
         //Set the close button
@@ -88,7 +97,6 @@ public class FloatingViewService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
-
                 //close the service and remove view from the view hierarchy
                 stopSelf();
             }
@@ -100,7 +108,6 @@ public class FloatingViewService extends Service {
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
-
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -136,7 +143,6 @@ public class FloatingViewService extends Service {
                         //Calculate the X and Y coordinates of the view.
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
                         params.y = initialY + (int) (event.getRawY() - initialTouchY);
-
 
                         //Update the layout with new X & Y coordinate
                         mWindowManager.updateViewLayout(mFloatingView, params);

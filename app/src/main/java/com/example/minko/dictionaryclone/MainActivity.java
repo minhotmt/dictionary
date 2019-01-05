@@ -6,20 +6,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
 import com.example.minko.dictionaryclone.Fragment.AdjectiveFragment;
 import com.example.minko.dictionaryclone.Fragment.AdverbFragment;
 import com.example.minko.dictionaryclone.Fragment.ArticleFragment;
@@ -39,8 +35,8 @@ import com.example.minko.dictionaryclone.Fragment.SearchFragment;
 import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
 import com.example.minko.dictionaryclone.Fragment.VerbFragment;
 import com.example.minko.dictionaryclone.Fragment.WebFragment;
+import com.example.minko.dictionaryclone.Service.DatabaseHelper;
 import com.example.minko.dictionaryclone.Service.FloatingViewService;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -54,22 +50,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ConjunctionFragment.OnFragmentInteractionListener, ParticlesFragment.OnFragmentInteractionListener,
         InterjectionFragment.OnFragmentInteractionListener, Book1Fragment.OnFragmentInteractionListener,
         Book2Fragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
-        WebFragment.OnFragmentInteractionListener {
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private DrawerLayout mDrawerLayout;
+        WebFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private DrawerLayout mDrawerLayout;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private BottomNavigationView defaultBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewPager = findViewById(R.id.viewpager);
-        tabLayout = findViewById(R.id.tabs);
-                setupViewPager();
-        tabLayout.setupWithViewPager(viewPager);
-        setIcon();
+
+        //Find IDs for all Navigation Views
+        defaultBottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        setListeners();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -78,13 +73,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23
         //you have to ask for the permission in runtime.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-
-
             //If the draw over permission is not available open the settings screen
             //to grant the permission.
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -95,23 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new SearchFragment(), "Search");
-        adapter.addFragment(new HistoryFragment(), "History");
-        adapter.addFragment(new FavoriteFragment(), "Favoriste");
-        adapter.addFragment(new TranslatorFragment(), "Translator");
-        adapter.addFragment(new WebFragment(), "Web");
-        viewPager.setAdapter(adapter);
-    }
-    private void setIcon()
-    {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_search);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_history);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_favorite);
-        tabLayout.getTabAt(3).setIcon(R.drawable.icon_translator);
-        tabLayout.getTabAt(4).setIcon(R.drawable.ic_web);
+    private void setListeners() {
+        defaultBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -174,8 +151,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_feedback) {
             sendFeedBack();
         } else if (id == R.id.nav_rate) {
-            Toast.makeText(getApplicationContext(), "Show", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.hdpsolution.englishrussiandict")));
+        } else if (id == R.id.nav_search) {
+            fragmentTransaction.replace(R.id.fr_child,new SearchFragment());
+        } else if (id == R.id.nav_history) {
+            fragmentTransaction.replace(R.id.fr_child,new HistoryFragment());
+        } else if (id == R.id.nav_favorite) {
+            fragmentTransaction.replace(R.id.fr_child,new FavoriteFragment());
+        } else if (id == R.id.transator) {
+            fragmentTransaction.replace(R.id.fr_child,new TranslatorFragment());
+        } else if (id == R.id.traslate_web) {
+            fragmentTransaction.replace(R.id.fr_child,new WebFragment());
         }
         fragmentTransaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -209,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra(Intent.EXTRA_BUG_REPORT, report);
             startActivity(intent);
         }
-
     }
 
     public void share(){
@@ -225,13 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Set and initialize the view elements.
      */
     private void initializeView() {
-//        findViewById(R.id.notify_me).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startService(new Intent(MainActivity.this, FloatingViewService.class));
-//                finish();
-//            }
-//        });
+
     }
 
     @Override
@@ -240,12 +219,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //Check if the permission is granted or not.
             if (resultCode == RESULT_OK) {
                 initializeView();
-            } else { //Permission is not available
-                Toast.makeText(this,
-                        "Draw over other app permission not available. Closing the application",
-                        Toast.LENGTH_SHORT).show();
-                finish();
             }
+//            else { //Permission is not available
+//                Toast.makeText(this,
+//                        "Draw over other app permission not available. Closing the application",
+//                        Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

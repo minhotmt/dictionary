@@ -68,11 +68,11 @@ public class WebFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web, container, false);
         // Inflate the layout for this fragment
-//        String url = "file:///android_asset/noun/plurals.html";
-//        WebView views = getView().findViewById(R.id.web);
-//        views.getSettings().setJavaScriptEnabled(true);
-//        views.loadUrl(url);
-//        views.setWebViewClient(new WebViewActivity.Mybrowser());
+        String url = "https://translate.google.com/#view=home&op=translate&sl=en&tl=ru";
+        WebView views = view.findViewById(R.id.web);
+        views.getSettings().setJavaScriptEnabled(true);
+        views.loadUrl(url);
+        views.setWebViewClient(new WebViewActivity.Mybrowser());
         return view;
 
     }

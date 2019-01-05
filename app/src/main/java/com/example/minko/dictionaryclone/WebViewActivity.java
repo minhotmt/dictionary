@@ -1,10 +1,12 @@
 package com.example.minko.dictionaryclone;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -16,14 +18,13 @@ public class WebViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        String url = "file:///android_asset/noun/plurals.html";
+        Intent intent = getIntent();
+        String url = intent.getStringExtra("url");
         WebView view = this.findViewById(R.id.webview);
         view.getSettings().setJavaScriptEnabled(true);
         view.loadUrl(url);
         view.setWebViewClient(new Mybrowser());
     }
-
 
     public static class Mybrowser extends WebViewClient {
         @Override

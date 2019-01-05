@@ -90,13 +90,16 @@ public class NounFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), WebViewActivity.class);
                 if (position == 0) {
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), WebViewActivity.class);
-                    getActivity().startActivity(intent);
-
+                    intent.putExtra("url", "file:///android_asset/noun/general_information.html");
                 } else if (position == 1) {
-               }
+                    intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                } else if (position == 2) {
+                    intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                }
+                getActivity().startActivity(intent);
             }
         });
         return view;

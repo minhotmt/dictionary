@@ -55,7 +55,8 @@
                 android:layout_height="20dp"
                 android:src="@drawable/ic_close"/>
             <LinearLayout
-                android:paddingBottom="60sp"
+                android:layout_marginTop="10sp"
+                android:paddingBottom="70sp"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -66,49 +67,51 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <ImageView
+                        android:padding="@dimen/item_padding"
                         android:src="@drawable/ic_england"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
+                        android:padding="@dimen/item_padding"
                         android:textColor="@color/colorPrimary"
                         android:text="English"
-                        android:textSize="@dimen/txt_big2"
+                        android:textSize="@dimen/txt_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageButton
+                        android:padding="@dimen/item_padding"
                         android:background="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icon_change"/>
                     <TextView
+                        android:padding="@dimen/margin_top"
                         android:textColor="@color/colorPrimary"
                         android:text="Russian"
-                        android:textSize="@dimen/txt_big2"
+                        android:textSize="@dimen/txt_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageView
+                        android:padding="@dimen/item_padding"
                         android:src="@drawable/icon_russian"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <EditText
+                    android:padding="@dimen/item_padding"
                     android:background="@color/white"
-                    android:hint="@string/hint_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableRight="@drawable/icon_delete"/>
-
             </LinearLayout>
-
             <Button
                 android:background="@color/colorAccent"
                 android:id="@+id/open_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:text="Home"
                />
-
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

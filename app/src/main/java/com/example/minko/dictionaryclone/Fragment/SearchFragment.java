@@ -1,28 +1,28 @@
 package com.example.minko.dictionaryclone.Fragment;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minko.dictionaryclone.Model.Fov;
 import com.example.minko.dictionaryclone.R;
-
-import java.text.BreakIterator;
+import com.example.minko.dictionaryclone.Service.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.Locale;
-
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -38,6 +38,9 @@ public class SearchFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static String talk = "";
+    DatabaseHelper db = new DatabaseHelper(getContext());
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -47,7 +50,6 @@ public class SearchFragment extends Fragment {
 
     public SearchFragment() {
         // Required empty public constructor
-
     }
 
     /**
@@ -85,16 +87,40 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search,
                 container, false);
 
-        final EditText editText = view.findViewById(R.id.edtText);
         ImageButton image = view.findViewById(R.id.imgSearch);
+        TextView txtResult = view.findViewById(R.id.txt_result);
+        ImageView iconFavor = view.findViewById(R.id.icon_favor);
         image.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 startVoiceInput();
             }
         });
+        iconFavor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                createFov("demo");
+                Toast.makeText(getActivity(), "Fover", Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
+    }
+    private void createFov(String fov) {
+
+        // newly inserted note id
+        db.insertFov(fov);
+        // get the newly inserted note from db
+//        Fov n = db.getFov(id);
+//
+//        if (n != null) {
+//            // adding new note to array list at 0 position
+//            notesList.add(0, n);
+//
+//            // refreshing the list
+//            mAdapter.notifyDataSetChanged();
+//
+//            toggleEmptyNotes();
+//        }
     }
 
     private void startVoiceInput() {
@@ -115,8 +141,9 @@ public class SearchFragment extends Fragment {
             case 100: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                  editText.setText(result.get(0));
-                    Toast.makeText(getContext(), result.get(0), Toast.LENGTH_SHORT).show();
+                    talk = result.get(0);
+                    EditText editText = getView().findViewById(R.id.edtText);
+                    editText.setText(result.get(0));
                 }
                 break;
             }
@@ -161,4 +188,5 @@ public class SearchFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
