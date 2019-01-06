@@ -39,18 +39,17 @@
         android:layout_alignParentStart="true"
         android:orientation="horizontal">
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="13dp"
             android:gravity="left"
             android:paddingLeft="10sp"
             android:id="@+id/txt_result"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="10"
-            android:textSize="@dimen/txt_normal"
-            android:text="TextView" />
+            android:textSize="23sp"/>
         <ImageView
-            android:scaleY="0.8"
-            android:scaleX="0.8"
+            android:scaleY="0.6"
+            android:scaleX="0.6"
             android:id="@+id/icon_favor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

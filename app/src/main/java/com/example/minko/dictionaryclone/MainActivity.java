@@ -35,7 +35,6 @@ import com.example.minko.dictionaryclone.Fragment.SearchFragment;
 import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
 import com.example.minko.dictionaryclone.Fragment.VerbFragment;
 import com.example.minko.dictionaryclone.Fragment.WebFragment;
-import com.example.minko.dictionaryclone.Service.DatabaseHelper;
 import com.example.minko.dictionaryclone.Service.FloatingViewService;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -85,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             initializeView();
         }
+        setDefaultFragment();
+    }
+
+    private void setDefaultFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fr_child,new SearchFragment());
+        fragmentTransaction.commit();
+
     }
 
     private void setListeners() {

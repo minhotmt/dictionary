@@ -1,23 +1,26 @@
 package com.example.minko.dictionaryclone.Fragment;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.minko.dictionaryclone.Model.Fov;
+import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.Service.DatabaseHelper;
+import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +38,6 @@ public class FavoriteFragment extends Fragment {
 
     private ListView mFovListView;
     private ArrayAdapter<String> mAdapter;
-    private DatabaseHelper mHelper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -44,7 +46,7 @@ public class FavoriteFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public FavoriteFragment() {
-        // Required empty public constructor
+
     }
 
     /**
@@ -78,34 +80,23 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
-        // Inflate the layout for this fragment
 
         mFovListView = view.findViewById(R.id.lst_favor);
-        ArrayList<String> taskList = new ArrayList<>();
-//        SQLiteDatabase db = mHelper.getReadableDatabase();
-//        Cursor cursor = db.query(Fov.FovEntry.TABLE,
-//                new String[]{Fov.FovEntry._ID, Fov.FovEntry.COL_FOV_TITLE},
-//                null, null, null, null, null);
-//        while (cursor.moveToNext()) {
-//            int idx = cursor.getColumnIndex(Fov.FovEntry.COL_FOV_TITLE);
-//            taskList.add(cursor.getString(idx));
-//        }
-//
-//
-//        if (mAdapter == null) {
-//            mAdapter = new ArrayAdapter<>(getActivity(),
-//                    R.layout.item_favor,
-//                    R.id.txt_favor,
-//                    taskList);
-//            mFovListView.setAdapter(mAdapter);
-//        } else {
-//            mAdapter.clear();
-//            mAdapter.addAll(taskList);
-//            mAdapter.notifyDataSetChanged();
-//        }
-
-//        cursor.close();
-//        db.close();
+        ImageView imgFavor = view.findViewById(R.id.img_favor);
+        ArrayList<String> favoriteList = new ArrayList<>();
+        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+        favoriteList = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
+        if (mAdapter == null) {
+            mAdapter = new ArrayAdapter<>(getActivity(),
+                    R.layout.item_favor,
+                    R.id.txt_favor,
+                    favoriteList);
+            mFovListView.setAdapter(mAdapter);
+        } else {
+            mAdapter.clear();
+            mAdapter.addAll(favoriteList);
+            mAdapter.notifyDataSetChanged();
+        }
 
         return view;
     }
@@ -134,6 +125,7 @@ public class FavoriteFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -149,5 +141,11 @@ public class FavoriteFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-
+    public void deleteFavorite(View view) {
+        View parent = (View) view.getParent();
+        TextView favoriteTextView = (TextView) parent.findViewById(R.id.txt_favor);
+        String favorite = String.valueOf(favoriteTextView.getText());
+        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+        dbFavoriteManager.deleteDavoriteByName(favorite);
+    }
 }

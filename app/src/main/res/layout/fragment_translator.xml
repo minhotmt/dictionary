@@ -68,7 +68,7 @@
             android:scaleY="0.8"
             android:paddingRight="5sp"
             android:paddingTop="10sp"
-            android:id="@+id/imgSearch"
+            android:id="@+id/imgDelete"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,5 +77,14 @@
             android:src="@drawable/icon_delete" />
 
     </RelativeLayout>
+
+    <ImageButton
+        android:layout_gravity="left"
+        android:foregroundGravity="left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/icon_listen"
+        android:src="@drawable/icon_listen"/>
 
 </LinearLayout>
