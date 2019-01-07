@@ -1,28 +1,21 @@
 package com.example.minko.dictionaryclone.Fragment;
 
 import android.content.Context;
-import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.Service.Databasehelper;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -87,9 +80,8 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         // Inflate the layout for this fragment
 
         ImageButton imageButton = view.findViewById(R.id.imgChange);
-        ImageButton iconListen = view.findViewById(R.id.icon_listen);
-        ImageButton iconDelete = view.findViewById(R.id.imgDelete);
-
+        final ImageButton iconListen = view.findViewById(R.id.icon_listen);
+        final ImageButton iconDelete = view.findViewById(R.id.imgDelete);
         final ImageView imageView1 = view.findViewById(R.id.img1);
         final ImageView imageView2 = view.findViewById(R.id.img2);
         final TextView txt1 = view.findViewById(R.id.txt1);
@@ -116,25 +108,27 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
 
         tts = new TextToSpeech(getContext(), this);
         txtText = view.findViewById(R.id.edtText);
+        txtText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
-//        Databasehelper myDbHelper;
-//        myDbHelper = new Databasehelper(getContext());
-//        try {
-//            myDbHelper.createDatabase();
-//
-//        } catch (IOException ioe) {
-//
-//            throw new Error("Unable to create database");
-//        }
-//
-//        try {
-//            myDbHelper.openDatabase();
-//
-//        }catch(SQLException sqle){
-//
-//            throw sqle;
-//        }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!txtText.getText().toString().equals("")){
+                    iconListen.setVisibility(View.VISIBLE);
+                } else {
+                    iconListen.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         return view;
     }
@@ -148,7 +142,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             img.setImageResource(R.drawable.ic_england);
             txt.setText("English");
         }
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -41,14 +41,24 @@ public class DBFavoriteManager extends SQLiteOpenHelper {
 
     //Add new a Favorite
     public void addFavorite(Favorite favorite){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(NAME, favorite.getName());
-        //Neu de null thi khi value bang null thi loi
+        Boolean check = false;
+        List<String> lst = this.getAllFavoriteString();
+        for (String item: lst){
+            if (item.equals(favorite.getName())){
+                check = true;
+            }
+        }
+        if (check){
 
-        db.insert(TABLE_NAME,null,values);
+        } else {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(NAME, favorite.getName());
+            //Neu de null thi khi value bang null thi loi
+            db.insert(TABLE_NAME,null,values);
+            db.close();
+        }
 
-        db.close();
     }
 
     /*
@@ -140,7 +150,7 @@ public class DBFavoriteManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteDavoriteByName(String name){
+    public void deleteFavoriteByName(String name){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, NAME + "=?", new String[]{name});
         db.close();

@@ -3,24 +3,37 @@ package com.example.minko.dictionaryclone.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minko.dictionaryclone.MainActivity;
+import com.example.minko.dictionaryclone.MeanDetail;
 import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
+import com.example.minko.dictionaryclone.Service.MyDatabase;
+import com.example.minko.dictionaryclone.WebViewActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import static android.app.Activity.RESULT_OK;
 
@@ -38,6 +51,10 @@ public class SearchFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static String talk = "";
+    private Cursor employees;
+    private MyDatabase db;
+    private ArrayList<Favorite> lstFavortite;
+    private ArrayAdapter<String> mAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,8 +102,10 @@ public class SearchFragment extends Fragment {
                 container, false);
 
         ImageButton image = view.findViewById(R.id.imgSearch);
+        final ListView lstSearch = view.findViewById(R.id.lstSearch);
         final ImageView iconFavor = view.findViewById(R.id.icon_favor);
         TextView txtResult = view.findViewById(R.id.txt_result);
+        final EditText editText = view.findViewById(R.id.edtText);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,9 +125,86 @@ public class SearchFragment extends Fragment {
         if (txtResult.getText().toString().equals("")) {
             iconFavor.setVisibility(View.INVISIBLE);
         }
+
+        db = new MyDatabase(getActivity());
+//        employees = db.getEmployees(); // you would not typically call this on the main thread
+        lstFavortite = db.getAllWord();
+        ArrayList<String> arr = new ArrayList<>();
+        for (Favorite favorite: lstFavortite){
+            arr.add(favorite.getName());
+        }
+
+        editText.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+                ListView lstSearch = getView().findViewById(R.id.lstSearch);
+                List<Favorite> suggest = new ArrayList<>();
+                for(Favorite favorite : lstFavortite) {
+                    if(favorite.getName().startsWith(editText.getText().toString().toLowerCase())) {
+                        suggest.add(favorite);
+                    }
+                }
+                ArrayList<String> arr = new ArrayList<>();
+                for (Favorite favorite: suggest){
+                    arr.add(favorite.getName());
+                }
+
+                if (mAdapter == null) {
+                    mAdapter = new ArrayAdapter<>(getActivity(),
+                            R.layout.item_no_favor,
+                            R.id.txt_favor,
+                            arr);
+                    lstSearch.setAdapter(mAdapter);
+                } else {
+                    mAdapter.clear();
+                    mAdapter.addAll(arr);
+                    mAdapter.notifyDataSetChanged();
+                }
+                lstSearch.setAdapter(mAdapter);
+            }
+
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+            public void afterTextChanged(Editable arg0) {
+            }
+        });
+
+        lstSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), MeanDetail.class);
+                intent.putExtra("word", ""+parent.getItemAtPosition(position).toString());
+                getActivity().startActivity(intent);
+                ImageView iconfavor = view.findViewById(R.id.img_favor);
+                //same for image and any widgetn your adapter layout xml
+                iconfavor.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        //do what u want
+                        Toast.makeText(getContext(), "Favorited", Toast.LENGTH_SHORT).show();
+                        ImageView iconFavor = getView().findViewById(R.id.icon_favor);
+                        iconFavor.setImageResource(R.drawable.ic_favorited);
+                        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+                        Favorite favorite = new Favorite( ""+parent.getItemAtPosition(position));
+                        dbFavoriteManager.addFavorite(favorite);
+                    }
+                });
+            }
+        });
+
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (employees != null){
+            employees.close();
+            db.close();
+        }
+
+    }
     private void startVoiceInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);

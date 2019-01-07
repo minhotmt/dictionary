@@ -5,22 +5,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,7 +75,6 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
-
         mFovListView = view.findViewById(R.id.lst_favor);
         ImageView imgFavor = view.findViewById(R.id.img_favor);
         ArrayList<String> favoriteList = new ArrayList<>();
@@ -97,7 +91,21 @@ public class FavoriteFragment extends Fragment {
             mAdapter.addAll(favoriteList);
             mAdapter.notifyDataSetChanged();
         }
-
+        mFovListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                ImageView iconfavor = view.findViewById(R.id.img_favor);
+                //same for image and any widgetn your adapter layout xml
+                iconfavor.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        //do what u want
+                        Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+                        dbFavoriteManager.deleteFavoriteByName(""+parent.getItemAtPosition(position));
+                    }
+                });
+            }
+        });
         return view;
     }
 
@@ -146,6 +154,6 @@ public class FavoriteFragment extends Fragment {
         TextView favoriteTextView = (TextView) parent.findViewById(R.id.txt_favor);
         String favorite = String.valueOf(favoriteTextView.getText());
         DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-        dbFavoriteManager.deleteDavoriteByName(favorite);
+        dbFavoriteManager.deleteFavoriteByName(favorite);
     }
 }
