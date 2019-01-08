@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.example.minko.dictionaryclone.MainActivity;
+import com.example.minko.dictionaryclone.Activity.MainActivity;
 import com.example.minko.dictionaryclone.R;
 
 public class FloatingViewService extends Service {

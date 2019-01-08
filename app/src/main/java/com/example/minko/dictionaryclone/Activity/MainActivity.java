@@ -1,4 +1,4 @@
-package com.example.minko.dictionaryclone;
+package com.example.minko.dictionaryclone.Activity;
 
 import android.app.ApplicationErrorReport;
 import android.content.Intent;
@@ -16,39 +16,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import com.example.minko.dictionaryclone.Fragment.AdjectiveFragment;
-import com.example.minko.dictionaryclone.Fragment.AdverbFragment;
-import com.example.minko.dictionaryclone.Fragment.ArticleFragment;
-import com.example.minko.dictionaryclone.Fragment.Book1Fragment;
-import com.example.minko.dictionaryclone.Fragment.Book2Fragment;
-import com.example.minko.dictionaryclone.Fragment.ConjunctionFragment;
+
 import com.example.minko.dictionaryclone.Fragment.FavoriteFragment;
 import com.example.minko.dictionaryclone.Fragment.HistoryFragment;
 import com.example.minko.dictionaryclone.Fragment.HomeFragment;
-import com.example.minko.dictionaryclone.Fragment.InterjectionFragment;
 import com.example.minko.dictionaryclone.Fragment.NounFragment;
-import com.example.minko.dictionaryclone.Fragment.NumberalFragment;
-import com.example.minko.dictionaryclone.Fragment.ParticlesFragment;
-import com.example.minko.dictionaryclone.Fragment.PrepositionFragment;
-import com.example.minko.dictionaryclone.Fragment.PronounFragment;
 import com.example.minko.dictionaryclone.Fragment.SearchFragment;
 import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
-import com.example.minko.dictionaryclone.Fragment.VerbFragment;
 import com.example.minko.dictionaryclone.Fragment.WebFragment;
+import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.FloatingViewService;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         SearchFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener,
         FavoriteFragment.OnFragmentInteractionListener, TranslatorFragment.OnFragmentInteractionListener,
-        NounFragment.OnFragmentInteractionListener, ArticleFragment.OnFragmentInteractionListener,
-        PronounFragment.OnFragmentInteractionListener, NumberalFragment.OnFragmentInteractionListener,
-        AdjectiveFragment.OnFragmentInteractionListener, AdverbFragment.OnFragmentInteractionListener,
-        VerbFragment.OnFragmentInteractionListener, PrepositionFragment.OnFragmentInteractionListener,
-        ConjunctionFragment.OnFragmentInteractionListener, ParticlesFragment.OnFragmentInteractionListener,
-        InterjectionFragment.OnFragmentInteractionListener, Book1Fragment.OnFragmentInteractionListener,
-        Book2Fragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
+        NounFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         WebFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
@@ -122,35 +107,180 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         int id = item.getItemId();
+        Bundle bundle = new Bundle();
+        ArrayList<String> lst = new ArrayList<>();
         if (id == R.id.home) {
             Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivityForResult(myIntent, 0);
         } else if (id == R.id.nouns) {
-            fragmentTransaction.replace(R.id.fr_layout,new NounFragment());
+            lst.add("General Information");
+            lst.add("Plurals");
+            lst.add("Nouns in Sentence");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Nouns");
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.article) {
-            fragmentTransaction.replace(R.id.fr_layout,new ArticleFragment());
+            lst.add("Indefinite Article");
+            lst.add("Definite Article");
+            lst.add("No Article");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Article");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.pronoun) {
-            fragmentTransaction.replace(R.id.fr_layout,new PronounFragment());
+            lst.add("General Information");
+            lst.add("The Use of Pronouns");
+            lst.add("Pronouns in Sentence");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Pronouns");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.numberal) {
-            fragmentTransaction.replace(R.id.fr_layout,new NumberalFragment());
+            lst.add("General Information");
+
+            lst.add("Cardinal Numberals");
+            lst.add("Ordinal Numberals");
+            lst.add("Numberals in Sentence");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Numberals");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.adjective) {
-            fragmentTransaction.replace(R.id.fr_layout,new AdjectiveFragment());
+            lst.add("General Information");
+
+            lst.add("Degrees of comparison");
+            lst.add("Adjective in Sentence");
+
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Adjective");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.adverb) {
-            fragmentTransaction.replace(R.id.fr_layout,new AdjectiveFragment());
+            lst.add("General Information");
+
+            lst.add("Degrees of comparison");
+            lst.add("Classification of Adverbs");
+            lst.add("Adverb in Sentence");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Adverb");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.verb) {
-            fragmentTransaction.replace(R.id.fr_layout,new VerbFragment());
+            lst.add("General Information");
+
+            lst.add("Personal/impersonal Verbs");
+            lst.add("Regular/Irregular Verbs");
+            lst.add("Transitive/Irregular Verbs");
+            lst.add("Person and Number");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Verb");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.preposition) {
-            fragmentTransaction.replace(R.id.fr_layout,new PrepositionFragment());
+            lst.add("General Information");
+            lst.add("Frequently Used");
+            lst.add("Preposition in Sentence");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Preposition");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.conjunction) {
-            fragmentTransaction.replace(R.id.fr_layout,new ConjunctionFragment());
+            lst.add("General Information");
+
+            lst.add("Coordinative Conjunctions");
+            lst.add("Subordinative Conjunctions");
+
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Conjunction");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.particles) {
-            fragmentTransaction.replace(R.id.fr_layout,new ParticlesFragment());
+            lst.add("General Information");
+
+            lst.add("Difference of Particles");
+
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Particles");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.interjection) {
-            fragmentTransaction.replace(R.id.fr_layout,new InterjectionFragment());
+            lst.add("General Information");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Interjection");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.nav_book1) {
-            fragmentTransaction.replace(R.id.fr_layout,new Book1Fragment());
+            lst.add("Common Phrases");
+            lst.add("Meeting. Communication");
+            lst.add("Trip. Journey");
+            lst.add("Hotel. Service");
+            lst.add("Cafe. Restaurant");
+            lst.add("City. Transport");
+            lst.add("Telephone. Mail");
+            lst.add("Bank. Money");
+            lst.add("Business Communication");
+            lst.add("Health");
+            lst.add("Problems");
+            lst.add("Miscellaneous");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Book1");
+
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.nav_book2) {
-            fragmentTransaction.replace(R.id.fr_layout,new Book2Fragment());
+            lst.add("General expressions");
+            lst.add("Conversation");
+            lst.add("About me");
+            lst.add("Trip");
+            lst.add("In the city");
+            lst.add("Hotel");
+            lst.add("Services");
+            lst.add("In guest");
+            lst.add("Moneys. Business");
+            lst.add("Food and drinks");
+            lst.add("Shopping");
+            lst.add("Entertainment");
+            lst.add("Sport");
+            lst.add("Tour");
+            lst.add("Journey");
+            lst.add("Transport");
+            lst.add("Phone. Mail");
+            lst.add("Health");
+            lst.add("Problems");
+            lst.add("Numbers");
+            lst.add("Time and date");
+            lst.add("Colours");
+            lst.add("Weather");
+            lst.add("Questions");
+            lst.add("Inscriptions and signs");
+            bundle.putStringArrayList("lstMenu", lst);
+            bundle.putString("titleMenu", "Book2");
+            NounFragment fragment = new NounFragment();
+            fragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.fr_layout,fragment);
         } else if (id == R.id.nav_fast) {
             startService(new Intent(getApplicationContext(), FloatingViewService.class));
         } else if (id == R.id.nav_share) {
@@ -227,12 +357,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == RESULT_OK) {
                 initializeView();
             }
-//            else { //Permission is not available
-//                Toast.makeText(this,
-//                        "Draw over other app permission not available. Closing the application",
-//                        Toast.LENGTH_SHORT).show();
-//                finish();
-//            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

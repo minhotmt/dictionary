@@ -3,8 +3,14 @@ package com.example.minko.dictionaryclone.Model;
 public class Favorite {
     private int id;
     private String name;
+    private String difinition;
 
     public Favorite() {
+    }
+
+    public Favorite(String name, String difinition) {
+        this.name = name;
+        this.difinition = difinition;
     }
 
     public Favorite(String name) {
@@ -14,6 +20,14 @@ public class Favorite {
     public Favorite(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public String getDifinition() {
+        return difinition;
+    }
+
+    public void setDifinition(String difinition) {
+        this.difinition = difinition;
     }
 
     public int getId() {
@@ -36,6 +50,7 @@ public class Favorite {
     public String toString() {
         return "Favorite{" +
                 "name='" + name + '\'' +
+                ", difinition='" + difinition + '\'' +
                 '}';
     }
 }

@@ -127,11 +127,25 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             public void afterTextChanged(Editable s) {
 
             }
+
         });
+
+//        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        // The text to translate
+        String text = "Hello, world!";
+        // Translates some text into Russian
+//        Translation translation =
+//                translate.translate(
+//                        text,
+//                        Translate.TranslateOption.sourceLanguage("en"),
+//                        Translate.TranslateOption.targetLanguage("ru"));
+//        Toast.makeText(getContext(), translation.toString(), Toast.LENGTH_SHORT).show();
 
 
         return view;
     }
+
+
 
     public void change(ImageView img, TextView txt){
         String a = txt.getText().toString();

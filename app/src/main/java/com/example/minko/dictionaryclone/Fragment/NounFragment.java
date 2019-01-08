@@ -8,16 +8,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.minko.dictionaryclone.CustomAdapter;
+import com.example.minko.dictionaryclone.Adapter.CustomAdapter;
 import com.example.minko.dictionaryclone.Model.Nouns;
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.WebViewActivity;
+import com.example.minko.dictionaryclone.Activity.WebViewActivity;
 
 import java.util.ArrayList;
 
@@ -75,30 +74,154 @@ public class NounFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArrayList<String> lstMenu = new ArrayList<>();
+        String title = null;
+        Bundle bundle = this.getArguments();
+        if(bundle != null) {
+            lstMenu = bundle.getStringArrayList("lstMenu");
+            title = bundle.getString("titleMenu");
+//            Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
+        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_noun, container, false);
         ListView listView = (ListView)view.findViewById(R.id.lst_nouns);
         ArrayList<Nouns> arrNouns = new ArrayList<>();
-        Nouns nouns = new Nouns("General Information");
-        Nouns nouns1 = new Nouns("Plusals");
-        Nouns nouns2 = new Nouns("Nouns in Sentence");
-        arrNouns.add(nouns);
-        arrNouns.add(nouns1);
-        arrNouns.add(nouns2);
+        Nouns nouns;
+        for (String item:lstMenu){
+            nouns = new Nouns(item);
+            arrNouns.add(nouns);
+        };
         CustomAdapter customAdaper = new CustomAdapter(getContext(),R.layout.row,arrNouns);
         listView.setAdapter(customAdaper);
+        final String finalTitle = title;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), WebViewActivity.class);
-                if (position == 0) {
-                    intent.putExtra("url", "file:///android_asset/noun/general_information.html");
-                } else if (position == 1) {
-                    intent.putExtra("url", "file:///android_asset/noun/plurals.html");
-                } else if (position == 2) {
-                    intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                switch (finalTitle){
+                    case "Nouns":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Article":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/article/definite_article.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/article/indefinite_article.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/article/no_article.html");
+                        }
+                        break;
+                    case "Pronouns":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/pronoun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/pronoun/pronouns_in_sentence.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/pronoun/the_use_of_pronouns.html");
+                        }
+                        break;
+                    case "Numberals":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/cardinal_numberals.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/generals_in_sentence.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Adjective":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Adverb":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Verb":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Preposition":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Conjunction":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Particles":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Interjection":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Book1":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                    case "Book2":
+                        if (position == 0) {
+                            intent.putExtra("url", "file:///android_asset/noun/general_information.html");
+                        } else if (position == 1) {
+                            intent.putExtra("url", "file:///android_asset/noun/plurals.html");
+                        } else if (position == 2) {
+                            intent.putExtra("url", "file:///android_asset/noun/nouns_in_sentence.html");
+                        }
+                        break;
+                        default:
+                            break;
+
                 }
+
                 getActivity().startActivity(intent);
             }
         });

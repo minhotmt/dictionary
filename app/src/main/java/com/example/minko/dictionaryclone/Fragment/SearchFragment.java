@@ -18,19 +18,15 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.minko.dictionaryclone.MainActivity;
-import com.example.minko.dictionaryclone.MeanDetail;
+import com.example.minko.dictionaryclone.Activity.MeanDetailActivity;
 import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
 import com.example.minko.dictionaryclone.Service.MyDatabase;
-import com.example.minko.dictionaryclone.WebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,7 +169,7 @@ public class SearchFragment extends Fragment {
         lstSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), MeanDetail.class);
+                intent.setClass(getActivity(), MeanDetailActivity.class);
                 intent.putExtra("word", ""+parent.getItemAtPosition(position).toString());
                 getActivity().startActivity(intent);
                 ImageView iconfavor = view.findViewById(R.id.img_favor);
@@ -190,6 +186,7 @@ public class SearchFragment extends Fragment {
                         dbFavoriteManager.addFavorite(favorite);
                     }
                 });
+
             }
         });
 

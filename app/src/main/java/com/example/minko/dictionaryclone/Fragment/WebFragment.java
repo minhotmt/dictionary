@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.WebViewActivity;
+import com.example.minko.dictionaryclone.Activity.WebViewActivity;
 
 /**
  * A simple {@link Fragment} subclass.

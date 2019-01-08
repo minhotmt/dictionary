@@ -1,4 +1,4 @@
-package com.example.minko.dictionaryclone;
+package com.example.minko.dictionaryclone.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.minko.dictionaryclone.Model.Nouns;
+import com.example.minko.dictionaryclone.R;
 
 import java.util.ArrayList;
 import java.util.List;
