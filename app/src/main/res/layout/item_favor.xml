@@ -6,6 +6,8 @@
     android:layout_gravity="center_vertical">
 
     <TextView
+        android:layout_marginLeft="5sp"
+        android:textColor="@color/colorPrimaryDark"
         android:id="@+id/txt_favor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
