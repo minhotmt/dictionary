@@ -4,6 +4,7 @@ import android.app.ApplicationErrorReport;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -26,6 +26,7 @@ import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
 import com.example.minko.dictionaryclone.Fragment.WebFragment;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.FloatingViewService;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -36,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NounFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
         WebFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout mDrawerLayout;
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private DrawerLayout mDrawerLayout;
     private BottomNavigationView defaultBottomNavigationView;
 
     @Override
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setDefaultFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fr_child,new SearchFragment());
+        fragmentTransaction.replace(R.id.fr_child, new SearchFragment());
         fragmentTransaction.commit();
 
     }
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString("titleMenu", "Nouns");
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.article) {
             lst.add("Indefinite Article");
             lst.add("Definite Article");
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.pronoun) {
             lst.add("General Information");
             lst.add("The Use of Pronouns");
@@ -140,22 +141,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.numberal) {
             lst.add("General Information");
-
             lst.add("Cardinal Numberals");
             lst.add("Ordinal Numberals");
             lst.add("Numberals in Sentence");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Numberals");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.adjective) {
             lst.add("General Information");
-
             lst.add("Degrees of comparison");
             lst.add("Adjective in Sentence");
 
@@ -164,73 +162,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.adverb) {
             lst.add("General Information");
-
             lst.add("Degrees of comparison");
             lst.add("Classification of Adverbs");
             lst.add("Adverb in Sentence");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Adverb");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.verb) {
             lst.add("General Information");
-
             lst.add("Personal/impersonal Verbs");
             lst.add("Regular/Irregular Verbs");
             lst.add("Transitive/Irregular Verbs");
             lst.add("Person and Number");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Verb");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.preposition) {
             lst.add("General Information");
             lst.add("Frequently Used");
             lst.add("Preposition in Sentence");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Preposition");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.conjunction) {
             lst.add("General Information");
-
             lst.add("Coordinative Conjunctions");
             lst.add("Subordinative Conjunctions");
-
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Conjunction");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.particles) {
             lst.add("General Information");
-
             lst.add("Difference of Particles");
-
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Particles");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.interjection) {
             lst.add("General Information");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Interjection");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.nav_book1) {
             lst.add("Common Phrases");
             lst.add("Meeting. Communication");
@@ -246,10 +232,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             lst.add("Miscellaneous");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Book1");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.nav_book2) {
             lst.add("General expressions");
             lst.add("Conversation");
@@ -280,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString("titleMenu", "Book2");
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fr_layout,fragment);
+            fragmentTransaction.replace(R.id.fr_layout, fragment);
         } else if (id == R.id.nav_fast) {
             startService(new Intent(getApplicationContext(), FloatingViewService.class));
         } else if (id == R.id.nav_share) {
@@ -290,15 +275,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_rate) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.hdpsolution.englishrussiandict")));
         } else if (id == R.id.nav_search) {
-            fragmentTransaction.replace(R.id.fr_child,new SearchFragment());
+            fragmentTransaction.replace(R.id.fr_child, new SearchFragment());
         } else if (id == R.id.nav_history) {
-            fragmentTransaction.replace(R.id.fr_child,new HistoryFragment());
+            fragmentTransaction.replace(R.id.fr_child, new HistoryFragment());
         } else if (id == R.id.nav_favorite) {
-            fragmentTransaction.replace(R.id.fr_child,new FavoriteFragment());
+            fragmentTransaction.replace(R.id.fr_child, new FavoriteFragment());
         } else if (id == R.id.transator) {
-            fragmentTransaction.replace(R.id.fr_child,new TranslatorFragment());
+            fragmentTransaction.replace(R.id.fr_child, new TranslatorFragment());
         } else if (id == R.id.traslate_web) {
-            fragmentTransaction.replace(R.id.fr_child,new WebFragment());
+            fragmentTransaction.replace(R.id.fr_child, new WebFragment());
         }
         fragmentTransaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -306,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void sendFeedBack(){
+    public void sendFeedBack() {
         try {
             int i = 3 / 0;
         } catch (Exception e) {
@@ -334,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void share(){
+    public void share() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         String shareBody = "https://play.google.com/store/apps/details?id=com.hdpsolution.englishrussiandict";

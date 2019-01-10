@@ -46,8 +46,6 @@ private static final String DATABASE_NAME = "dictionary.sqlite";
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-//        String [] sqlSelect = {"0 _id", "FirstName", "LastName"};
-//        String sqlTables = "Employees";
         String [] sqlSelect = {"0 _id", "word", "definition"};
         String sqlTables = "words";
 
@@ -66,5 +64,20 @@ private static final String DATABASE_NAME = "dictionary.sqlite";
         return lst;
 
     }
+
+    public String getMeanByWord(String word){
+        String mean = "";
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        Cursor b = db.rawQuery("SELECT * FROM words WHERE word = '"+word+"'",  null);
+        if(b.moveToFirst()){
+            do{
+                mean = b.getString(b.getColumnIndex("definition"));
+            } while (b.moveToNext());
+        }
+        return mean;
+    }
+
+
 
 }

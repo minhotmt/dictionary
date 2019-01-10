@@ -1,6 +1,7 @@
 package com.example.minko.dictionaryclone.Service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -10,14 +11,24 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.minko.dictionaryclone.Activity.MainActivity;
 import com.example.minko.dictionaryclone.R;
 
 public class FloatingViewService extends Service {
     private WindowManager mWindowManager;
     private View mFloatingView;
+    private TextView txt1, txt2;
+    private ImageView img1, img2;
+    private ImageButton imgChange;
+    private EditText edtWord;
 
     public FloatingViewService() {
     }
@@ -32,39 +43,31 @@ public class FloatingViewService extends Service {
         super.onCreate();
         //Inflate the floating view layout we created
         mFloatingView = LayoutInflater.from(this).inflate(R.layout.widget_fast, null);
-
-
         int LAYOUT_FLAG;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
         }
-
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 LAYOUT_FLAG,
-
 //                WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-
         //Specify the view position
         params.gravity = Gravity.TOP | Gravity.LEFT;        //Initially view will be added to top-left corner
 //        params.x = 0;
 //        params.y = 100;
-
         //Add the view to the window
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingView, params);
-
         //The root element of the collapsed view layout
         final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
         //The root element of the expanded view layout
         final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
-
         //Set the close button
         ImageView closeButtonCollapsed = (ImageView) mFloatingView.findViewById(R.id.close_btn);
         closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +102,51 @@ public class FloatingViewService extends Service {
 
                 //close the service and remove view from the view hierarchy
                 stopSelf();
+            }
+        });
+        txt1 = mFloatingView.findViewById(R.id.txt1);
+        txt2 = mFloatingView.findViewById(R.id.txt2);
+        img1 = mFloatingView.findViewById(R.id.img1);
+        img2 = mFloatingView.findViewById(R.id.img2);
+        edtWord = mFloatingView.findViewById(R.id.edtText);
+
+        //image change
+        imgChange = mFloatingView.findViewById(R.id.imgChange);
+        imgChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                change(img1, txt1);
+                change(img2, txt2);
+            }
+        });
+        //Edit text
+        edtWord.clearFocus();
+        edtWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(edtWord, InputMethodManager.SHOW_IMPLICIT);
+//                Toast.makeText(getApplicationContext(), "click 2", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        edtWord.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, final boolean hasFocus) {
+                if (hasFocus && edtWord.isEnabled() && edtWord.isFocusable()) {
+                    edtWord.post(new Runnable() {
+                        @Override
+                        public void run() {
+//                            final InputMethodManager imm = (InputMethodManager)getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.showSoftInput(edtWord,InputMethodManager.SHOW_IMPLICIT);
+//                            Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
@@ -168,5 +216,17 @@ public class FloatingViewService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
+    }
+
+
+    public void change(ImageView img, TextView txt) {
+        String a = txt.getText().toString();
+        if (a.equals("English")) {
+            img.setImageResource(R.drawable.icon_russian);
+            txt.setText("Russian");
+        } else {
+            img.setImageResource(R.drawable.ic_england);
+            txt.setText("English");
+        }
     }
 }

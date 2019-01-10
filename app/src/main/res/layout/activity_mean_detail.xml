@@ -18,6 +18,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:id="@+id/txtWord"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -42,6 +44,10 @@
             android:src="@drawable/icon_listen" />
     </LinearLayout>
     <TextView
+        android:paddingLeft="12sp"
+        android:textSize="@dimen/txt_big"
+        android:text="hello"
+        android:textColor="@color/colorPrimaryDark"
         android:id="@+id/txtMean"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

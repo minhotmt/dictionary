@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import com.example.minko.dictionaryclone.Service.MyDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -51,6 +53,7 @@ public class SearchFragment extends Fragment {
     private MyDatabase db;
     private ArrayList<Favorite> lstFavortite;
     private ArrayAdapter<String> mAdapter;
+    private Button btnTest;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -99,8 +102,8 @@ public class SearchFragment extends Fragment {
 
         ImageButton image = view.findViewById(R.id.imgSearch);
         final ListView lstSearch = view.findViewById(R.id.lstSearch);
-        final ImageView iconFavor = view.findViewById(R.id.icon_favor);
-        TextView txtResult = view.findViewById(R.id.txt_result);
+//        final ImageView iconFavor = view.findViewById(R.id.icon_favor);
+//        TextView txtResult = view.findViewById(R.id.txt_result);
         final EditText editText = view.findViewById(R.id.edtText);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,25 +111,24 @@ public class SearchFragment extends Fragment {
                 startVoiceInput();
             }
         });
-        iconFavor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                iconFavor.setImageResource(R.drawable.ic_favorited);
-                DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-                TextView txtResult = getView().findViewById(R.id.txt_result);
-                Favorite favorite = new Favorite(1, txtResult.getText().toString());
-                dbFavoriteManager.addFavorite(favorite);
-            }
-        });
-        if (txtResult.getText().toString().equals("")) {
-            iconFavor.setVisibility(View.INVISIBLE);
-        }
+//        iconFavor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                iconFavor.setImageResource(R.drawable.ic_favorited);
+//                DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+//                TextView txtResult = getView().findViewById(R.id.txt_result);
+//                Favorite favorite = new Favorite(1, txtResult.getText().toString());
+//                dbFavoriteManager.addFavorite(favorite);
+//            }
+//        });
+//        if (txtResult.getText().toString().equals("")) {
+//            iconFavor.setVisibility(View.INVISIBLE);
+//        }
 
         db = new MyDatabase(getActivity());
-//        employees = db.getEmployees(); // you would not typically call this on the main thread
         lstFavortite = db.getAllWord();
         ArrayList<String> arr = new ArrayList<>();
-        for (Favorite favorite: lstFavortite){
+        for (Favorite favorite : lstFavortite) {
             arr.add(favorite.getName());
         }
 
@@ -135,16 +137,15 @@ public class SearchFragment extends Fragment {
                                       int arg3) {
                 ListView lstSearch = getView().findViewById(R.id.lstSearch);
                 List<Favorite> suggest = new ArrayList<>();
-                for(Favorite favorite : lstFavortite) {
-                    if(favorite.getName().startsWith(editText.getText().toString().toLowerCase())) {
+                for (Favorite favorite : lstFavortite) {
+                    if (favorite.getName().startsWith(editText.getText().toString().toLowerCase())) {
                         suggest.add(favorite);
                     }
                 }
                 ArrayList<String> arr = new ArrayList<>();
-                for (Favorite favorite: suggest){
+                for (Favorite favorite : suggest) {
                     arr.add(favorite.getName());
                 }
-
                 if (mAdapter == null) {
                     mAdapter = new ArrayAdapter<>(getActivity(),
                             R.layout.item_no_favor,
@@ -162,15 +163,24 @@ public class SearchFragment extends Fragment {
             public void beforeTextChanged(CharSequence arg0, int arg1,
                                           int arg2, int arg3) {
             }
+
             public void afterTextChanged(Editable arg0) {
             }
         });
 
         lstSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+//                Button btnTest = view.findViewById(R.id.btnTest);
+//                btnTest.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Toast.makeText(getContext(), "CLik ngay", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), MeanDetailActivity.class);
-                intent.putExtra("word", ""+parent.getItemAtPosition(position).toString());
+                intent.putExtra("word", "" + parent.getItemAtPosition(position).toString());
                 getActivity().startActivity(intent);
                 ImageView iconfavor = view.findViewById(R.id.img_favor);
                 //same for image and any widgetn your adapter layout xml
@@ -179,10 +189,10 @@ public class SearchFragment extends Fragment {
                     public void onClick(View arg0) {
                         //do what u want
                         Toast.makeText(getContext(), "Favorited", Toast.LENGTH_SHORT).show();
-                        ImageView iconFavor = getView().findViewById(R.id.icon_favor);
-                        iconFavor.setImageResource(R.drawable.ic_favorited);
+//                        ImageView iconFavor = getView().findViewById(R.id.icon_favor);
+//                        iconFavor.setImageResource(R.drawable.ic_favorited);
                         DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-                        Favorite favorite = new Favorite( ""+parent.getItemAtPosition(position));
+                        Favorite favorite = new Favorite("" + parent.getItemAtPosition(position));
                         dbFavoriteManager.addFavorite(favorite);
                     }
                 });
@@ -196,12 +206,13 @@ public class SearchFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (employees != null){
+        if (employees != null) {
             employees.close();
             db.close();
         }
 
     }
+
     private void startVoiceInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -222,11 +233,11 @@ public class SearchFragment extends Fragment {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     talk = result.get(0);
                     EditText editText = getView().findViewById(R.id.edtText);
-                    TextView txtResult = getView().findViewById(R.id.txt_result);
-                    ImageView iconFavor = getView().findViewById(R.id.icon_favor);
+//                    TextView txtResult = getView().findViewById(R.id.txt_result);
+//                    ImageView iconFavor = getView().findViewById(R.id.icon_favor);
                     editText.setText(result.get(0));
-                    txtResult.setText(result.get(0));
-                    iconFavor.setVisibility(View.VISIBLE);
+//                    txtResult.setText(result.get(0));
+//                    iconFavor.setVisibility(View.VISIBLE);
                 }
                 break;
             }

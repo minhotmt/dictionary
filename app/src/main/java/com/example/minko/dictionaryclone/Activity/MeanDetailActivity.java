@@ -1,9 +1,9 @@
 package com.example.minko.dictionaryclone.Activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -11,13 +11,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
+import com.example.minko.dictionaryclone.Service.MyDatabase;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MeanDetailActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+    MyDatabase myDatabase;
     private TextToSpeech tts;
     private String word;
+    private ArrayList<Favorite> lstFavorite;
+    private String mean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +39,14 @@ public class MeanDetailActivity extends AppCompatActivity implements TextToSpeec
         TextView txtWord = findViewById(R.id.txtWord);
         TextView txtMean = findViewById(R.id.txtMean);
         ImageButton imgListen = findViewById(R.id.imgListen);
+        myDatabase = new MyDatabase(getApplicationContext());
+        lstFavorite = myDatabase.getAllWord();
+        for (Favorite item: lstFavorite){
+            if (word.equals(item.getName())){
+                mean = item.getDifinition();
+            }
+        }
+        txtMean.setText(mean);
         txtWord.setText(word);
         tts = new TextToSpeech(getApplicationContext(), this);
         imgListen.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +56,7 @@ public class MeanDetailActivity extends AppCompatActivity implements TextToSpeec
             }
         });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
