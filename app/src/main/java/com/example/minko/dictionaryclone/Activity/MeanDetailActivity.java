@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
@@ -41,8 +40,8 @@ public class MeanDetailActivity extends AppCompatActivity implements TextToSpeec
         ImageButton imgListen = findViewById(R.id.imgListen);
         myDatabase = new MyDatabase(getApplicationContext());
         lstFavorite = myDatabase.getAllWord();
-        for (Favorite item: lstFavorite){
-            if (word.equals(item.getName())){
+        for (Favorite item : lstFavorite) {
+            if (word.equals(item.getName())) {
                 mean = item.getDifinition();
             }
         }

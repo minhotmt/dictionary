@@ -4,34 +4,40 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.minko.dictionaryclone.Activity.MainActivity;
+import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
 import com.example.minko.dictionaryclone.R;
 
-public class FloatingViewService extends Service {
-    private WindowManager mWindowManager;
-    private View mFloatingView;
-    private TextView txt1, txt2;
-    private ImageView img1, img2;
-    private ImageButton imgChange;
-    private EditText edtWord;
+public class FloatingViewService extends Service implements TextToSpeech.OnInitListener {
 
-    public FloatingViewService() {
-    }
+    WindowManager.LayoutParams mWindowsParams;
+    private Context mContext;
+    private WindowManager mWindowManager;
+    private View mView;
+    private boolean wasInFocus = true;
+    private TextToSpeech tts;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -41,57 +47,21 @@ public class FloatingViewService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Inflate the floating view layout we created
-        mFloatingView = LayoutInflater.from(this).inflate(R.layout.widget_fast, null);
-        int LAYOUT_FLAG;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else {
-            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
-        }
-        //Add the view to the window.
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_FLAG,
-//                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        //Specify the view position
-        params.gravity = Gravity.TOP | Gravity.LEFT;        //Initially view will be added to top-left corner
-//        params.x = 0;
-//        params.y = 100;
-        //Add the view to the window
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mWindowManager.addView(mFloatingView, params);
+        mContext = this;
+        mView = LayoutInflater.from(this).inflate(R.layout.widget_fast, null);
         //The root element of the collapsed view layout
-        final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
-        //The root element of the expanded view layout
-        final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
+
         //Set the close button
-        ImageView closeButtonCollapsed = (ImageView) mFloatingView.findViewById(R.id.close_btn);
+        ImageView closeButtonCollapsed = mView.findViewById(R.id.close_btn);
         closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //close the service and remove the from from the window
                 stopSelf();
             }
         });
 
-
-        //Set the close button
-        ImageView closeButton = (ImageView) mFloatingView.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                collapsedView.setVisibility(View.VISIBLE);
-                expandedView.setVisibility(View.GONE);
-            }
-        });
-
-
         //Open the application on thi button click
-        Button openButton = (Button) mFloatingView.findViewById(R.id.open_button);
+        Button openButton = (Button) mView.findViewById(R.id.open_button);
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,59 +69,83 @@ public class FloatingViewService extends Service {
                 Intent intent = new Intent(FloatingViewService.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-
                 //close the service and remove view from the view hierarchy
                 stopSelf();
             }
         });
-        txt1 = mFloatingView.findViewById(R.id.txt1);
-        txt2 = mFloatingView.findViewById(R.id.txt2);
-        img1 = mFloatingView.findViewById(R.id.img1);
-        img2 = mFloatingView.findViewById(R.id.img2);
-        edtWord = mFloatingView.findViewById(R.id.edtText);
 
-        //image change
-        imgChange = mFloatingView.findViewById(R.id.imgChange);
-        imgChange.setOnClickListener(new View.OnClickListener() {
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        allAboutLayout(intent);
+        moveView();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+
+        if (mView != null) {
+            mWindowManager.removeView(mView);
+        }
+        super.onDestroy();
+    }
+
+    private void moveView() {
+        final View collapsedView = mView.findViewById(R.id.collapse_view);
+        //The root element of the expanded view layout
+        final View expandedView = mView.findViewById(R.id.expanded_container);
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 0.7f);
+        int height = (int) (metrics.heightPixels * 0.45f);
+
+        mWindowsParams = new WindowManager.LayoutParams(
+                width,//WindowManager.LayoutParams.WRAP_CONTENT,
+                height,//WindowManager.LayoutParams.WRAP_CONTENT,
+                //WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+
+                (Build.VERSION.SDK_INT <= 25) ? WindowManager.LayoutParams.TYPE_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                //WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, // Not displaying keyboard on bg activity's EditText
+                //WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, //Not work with EditText on keyboard
+                PixelFormat.TRANSLUCENT);
+        ImageView closeButton = mView.findViewById(R.id.close_button);
+        ImageView closeButtonCollapsed = mView.findViewById(R.id.close_btn);
+        closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                change(img1, txt1);
-                change(img2, txt2);
+            public void onClick(View view) {
+                //close the service and remove the from from the window
+                stopSelf();
             }
         });
-        //Edit text
-        edtWord.clearFocus();
-        edtWord.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-//                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(edtWord, InputMethodManager.SHOW_IMPLICIT);
-//                Toast.makeText(getApplicationContext(), "click 2", Toast.LENGTH_SHORT).show();
-
+            public void onClick(View view) {
+                collapsedView.setVisibility(View.VISIBLE);
+                expandedView.setVisibility(View.GONE);
             }
         });
-
-
-        edtWord.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        Button openButton = (Button) mView.findViewById(R.id.open_button);
+        openButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(final View v, final boolean hasFocus) {
-                if (hasFocus && edtWord.isEnabled() && edtWord.isFocusable()) {
-                    edtWord.post(new Runnable() {
-                        @Override
-                        public void run() {
-//                            final InputMethodManager imm = (InputMethodManager)getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                            imm.showSoftInput(edtWord,InputMethodManager.SHOW_IMPLICIT);
-//                            Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+            public void onClick(View view) {
+                //Open the application  click.
+                Intent intent = new Intent(FloatingViewService.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                //close the service and remove view from the view hierarchy
+                stopSelf();
             }
         });
+        mWindowsParams.gravity = Gravity.TOP | Gravity.LEFT;
+        //params.x = 0;
+        mWindowsParams.y = 100;
+        mWindowManager.addView(mView, mWindowsParams);
 
-        //Drag and move floating view using user's touch action.
-        mFloatingView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
+        mView.setOnTouchListener(new View.OnTouchListener() {
+            long startTime = System.currentTimeMillis();
             private int initialX;
             private int initialY;
             private float initialTouchX;
@@ -159,17 +153,22 @@ public class FloatingViewService extends Service {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (System.currentTimeMillis() - startTime <= 300) {
+                    return false;
+                }
+                if (isViewInBounds(mView, (int) (event.getRawX()), (int) (event.getRawY()))) {
+                    editTextReceiveFocus();
+                } else {
+                    editTextDontReceiveFocus();
+                }
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-
-                        //remember the initial position.
-                        initialX = params.x;
-                        initialY = params.y;
-
-                        //get the touch location
+                        initialX = mWindowsParams.x;
+                        initialY = mWindowsParams.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
-                        return true;
+                        break;
                     case MotionEvent.ACTION_UP:
                         int Xdiff = (int) (event.getRawX() - initialTouchX);
                         int Ydiff = (int) (event.getRawY() - initialTouchY);
@@ -186,38 +185,126 @@ public class FloatingViewService extends Service {
                                 expandedView.setVisibility(View.VISIBLE);
                             }
                         }
-                        return true;
+                        break;
                     case MotionEvent.ACTION_MOVE:
-                        //Calculate the X and Y coordinates of the view.
-                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
-
-                        //Update the layout with new X & Y coordinate
-                        mWindowManager.updateViewLayout(mFloatingView, params);
-                        return true;
+                        mWindowsParams.x = initialX + (int) (event.getRawX() - initialTouchX);
+                        mWindowsParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        mWindowManager.updateViewLayout(mView, mWindowsParams);
+                        break;
                 }
                 return false;
             }
         });
     }
 
+    private boolean isViewInBounds(View view, int x, int y) {
+        Rect outRect = new Rect();
+        int[] location = new int[2];
+        view.getDrawingRect(outRect);
+        view.getLocationOnScreen(location);
+        outRect.offset(location[0], location[1]);
+        return outRect.contains(x, y);
+    }
 
-    /**
-     * Detect if the floating view is collapsed or expanded.
-     *
-     * @return true if the floating view is collapsed.
-     */
+    private void editTextReceiveFocus() {
+        if (!wasInFocus) {
+            mWindowsParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            mWindowManager.updateViewLayout(mView, mWindowsParams);
+            wasInFocus = true;
+        }
+    }
+
     private boolean isViewCollapsed() {
-        return mFloatingView == null || mFloatingView.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
+        return mView == null || mView.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
+    private void editTextDontReceiveFocus() {
+        if (wasInFocus) {
+            mWindowsParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            mWindowManager.updateViewLayout(mView, mWindowsParams);
+            wasInFocus = false;
+        }
     }
 
+    private void allAboutLayout(Intent intent) {
+
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mView = layoutInflater.inflate(R.layout.widget_fast, null);
+
+        final EditText edtWord = mView.findViewById(R.id.edtText);
+        final TextView tvMean = mView.findViewById(R.id.txtWord);
+        final TextView tv1 = mView.findViewById(R.id.txt1);
+        final TextView tv2 = mView.findViewById(R.id.txt2);
+        final ImageView img1 = mView.findViewById(R.id.img1);
+        final ImageView img2 = mView.findViewById(R.id.img2);
+        final ImageButton imgChange = mView.findViewById(R.id.imgChange);
+        final ImageButton imgReset = mView.findViewById(R.id.imgReset);
+        final ImageButton imgListen = mView.findViewById(R.id.imgListen);
+        tts = new TextToSpeech(getApplicationContext(), this);
+
+        edtWord.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+            }
+        });
+
+        edtWord.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (edtWord.getText().toString().equals("")) {
+                    imgListen.setVisibility(View.INVISIBLE);
+                } else imgListen.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        imgChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                change(img1, tv1);
+                change(img2, tv2);
+            }
+        });
+
+        imgReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtWord.setText("");
+            }
+        });
+
+        edtWord.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    //Translate api
+                    new MyAsyncTask().execute(edtWord.getText().toString());
+                    imgListen.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String text = edtWord.getText().toString();
+                            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    });
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+    }
 
     public void change(ImageView img, TextView txt) {
         String a = txt.getText().toString();
@@ -228,5 +315,29 @@ public class FloatingViewService extends Service {
             img.setImageResource(R.drawable.ic_england);
             txt.setText("English");
         }
+    }
+
+    @Override
+    public void onInit(int status) {
+
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, String, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            String a = TranslatorFragment.Translator(strings[0]);
+            publishProgress(a);
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            String mean = values[0];
+            TextView textView = mView.findViewById(R.id.txtWord);
+            textView.setText(mean);
+        }
+
     }
 }

@@ -21,12 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2">
-            <!--<android.support.v4.view.ViewPager-->
-                <!--android:id="@+id/viewpager"-->
-                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-            <!--</android.support.v4.view.ViewPager>-->
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -36,28 +31,19 @@
                     android:id="@+id/fr_child"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
                 </FrameLayout>
-                <!--<android.support.design.widget.TabLayout-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:id="@+id/tabs"-->
-                <!--android:background="@color/tabs"-->
-                <!--app:tabSelectedTextColor="@color/bnv_tab_item_selector"-->
-                <!--android:layout_width="match_parent"-->
-                <!--app:tabTextAppearance="@style/MineCustomTabText"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:tabMode="fixed"-->
-                <!--app:tabGravity="fill"/>-->
+
                 <android.support.design.widget.BottomNavigationView
                     android:id="@+id/bottom_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
                     android:background="@color/tabs"
                     app:itemTextColor="@color/bnv_tab_item_selector"
                     app:itemIconTint="@color/bnv_tab_item_selector"
-                    app:menu="@menu/navigation" />
+                    app:menu="@menu/navigation"
+                    />
             </LinearLayout>
 
         </FrameLayout>

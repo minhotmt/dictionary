@@ -1,5 +1,6 @@
 package com.example.minko.dictionaryclone.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.ApplicationErrorReport;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.minko.dictionaryclone.Fragment.FavoriteFragment;
@@ -29,6 +33,7 @@ import com.example.minko.dictionaryclone.Service.FloatingViewService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -40,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private DrawerLayout mDrawerLayout;
     private BottomNavigationView defaultBottomNavigationView;
+    private ActionBar actionbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +54,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Find IDs for all Navigation Views
         defaultBottomNavigationView = findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.disableShiftMode(defaultBottomNavigationView);
 
         setListeners();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle("Home");
         mDrawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -122,26 +130,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Nouns");
         } else if (id == R.id.article) {
             lst.add("Indefinite Article");
             lst.add("Definite Article");
             lst.add("No Article");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Article");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Article");
         } else if (id == R.id.pronoun) {
             lst.add("General Information");
             lst.add("The Use of Pronouns");
             lst.add("Pronouns in Sentence");
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Pronouns");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Pronoun");
         } else if (id == R.id.numberal) {
             lst.add("General Information");
             lst.add("Cardinal Numberals");
@@ -152,17 +161,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Numberal");
         } else if (id == R.id.adjective) {
             lst.add("General Information");
             lst.add("Degrees of comparison");
             lst.add("Adjective in Sentence");
-
             bundle.putStringArrayList("lstMenu", lst);
             bundle.putString("titleMenu", "Adjective");
-
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Adjective");
         } else if (id == R.id.adverb) {
             lst.add("General Information");
             lst.add("Degrees of comparison");
@@ -173,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Adverb");
         } else if (id == R.id.verb) {
             lst.add("General Information");
             lst.add("Personal/impersonal Verbs");
@@ -184,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Verb");
         } else if (id == R.id.preposition) {
             lst.add("General Information");
             lst.add("Frequently Used");
@@ -193,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Preposition");
         } else if (id == R.id.conjunction) {
             lst.add("General Information");
             lst.add("Coordinative Conjunctions");
@@ -202,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Conjunction");
         } else if (id == R.id.particles) {
             lst.add("General Information");
             lst.add("Difference of Particles");
@@ -210,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Particles");
         } else if (id == R.id.interjection) {
             lst.add("General Information");
             bundle.putStringArrayList("lstMenu", lst);
@@ -217,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Interjection");
         } else if (id == R.id.nav_book1) {
             lst.add("Common Phrases");
             lst.add("Meeting. Communication");
@@ -235,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Book 1");
         } else if (id == R.id.nav_book2) {
             lst.add("General expressions");
             lst.add("Conversation");
@@ -266,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             NounFragment fragment = new NounFragment();
             fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fr_layout, fragment);
+            actionbar.setTitle("Book 2");
         } else if (id == R.id.nav_fast) {
             startService(new Intent(getApplicationContext(), FloatingViewService.class));
         } else if (id == R.id.nav_share) {
@@ -276,14 +293,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.hdpsolution.englishrussiandict")));
         } else if (id == R.id.nav_search) {
             fragmentTransaction.replace(R.id.fr_child, new SearchFragment());
+            actionbar.setTitle("Home");
         } else if (id == R.id.nav_history) {
             fragmentTransaction.replace(R.id.fr_child, new HistoryFragment());
+            actionbar.setTitle("Home");
         } else if (id == R.id.nav_favorite) {
             fragmentTransaction.replace(R.id.fr_child, new FavoriteFragment());
+            actionbar.setTitle("Home");
         } else if (id == R.id.transator) {
             fragmentTransaction.replace(R.id.fr_child, new TranslatorFragment());
+            actionbar.setTitle("Home");
         } else if (id == R.id.traslate_web) {
             fragmentTransaction.replace(R.id.fr_child, new WebFragment());
+            actionbar.setTitle("Home");
         }
         fragmentTransaction.commit();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -344,6 +366,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public static class BottomNavigationViewHelper {
+        @SuppressLint("RestrictedApi")
+        public static void disableShiftMode(BottomNavigationView view) {
+            BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+            try {
+                Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+                shiftingMode.setAccessible(true);
+                shiftingMode.setBoolean(menuView, false);
+                shiftingMode.setAccessible(false);
+                for (int i = 0; i < menuView.getChildCount(); i++) {
+                    BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                    //noinspection RestrictedApi
+                    item.setShiftingMode(false);
+                    // set once again checked value, so view will be updated
+                    //noinspection RestrictedApi
+                    item.setChecked(item.getItemData().isChecked());
+                }
+            } catch (NoSuchFieldException e) {
+                Log.e("BNVHelper", "Unable to get shift mode field", e);
+            } catch (IllegalAccessException e) {
+                Log.e("BNVHelper", "Unable to change value of shift mode", e);
+            }
         }
     }
 }

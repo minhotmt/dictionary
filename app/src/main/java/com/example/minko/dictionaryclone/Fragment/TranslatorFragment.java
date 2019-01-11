@@ -74,6 +74,21 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         return fragment;
     }
 
+    public static String Translator(String text) {
+        TranslateOptions options = TranslateOptions.newBuilder()
+                .setApiKey("AIzaSyCesRSQ_xOlB489lpIZvOxSBFRPv6a_lNk")
+                .build();
+        com.google.cloud.translate.Translate translate = options.getService();
+        try {
+            Translation translation = translate.translate(text, // dogings[0] = "dog"
+                    com.google.cloud.translate.Translate.TranslateOption.sourceLanguage("en"), // en
+                    com.google.cloud.translate.Translate.TranslateOption.targetLanguage("ru")); // vi
+            return translation.getTranslatedText();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +171,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         return view;
     }
 
-
     public void change(ImageView img, TextView txt) {
         String a = txt.getText().toString();
         if (a.equals("English")) {
@@ -220,24 +234,9 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         super.onDestroy();
     }
 
-    private void speakOut() {
+    public void speakOut() {
         String text = edtText.getText().toString();
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    public String Translator(String text) {
-        TranslateOptions options = TranslateOptions.newBuilder()
-                .setApiKey("AIzaSyCesRSQ_xOlB489lpIZvOxSBFRPv6a_lNk")
-                .build();
-        com.google.cloud.translate.Translate translate = options.getService();
-        try {
-            Translation translation = translate.translate(text, // dogings[0] = "dog"
-                    com.google.cloud.translate.Translate.TranslateOption.sourceLanguage("en"), // en
-                    com.google.cloud.translate.Translate.TranslateOption.targetLanguage("ru")); // vi
-            return translation.getTranslatedText();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 
     /**
@@ -290,10 +289,10 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
 //            ProgressBar progressBar = (ProgressBar) contextParent.findViewById(R.id.prbDemo);
             //vì publishProgress chỉ truyền 1 đối số
             //nên mảng values chỉ có 1 phần tử
-            String mean = values[0];
             //tăng giá trị của Progressbar lên
 //            progressBar.setProgress(number);
             //đồng thời hiện thị giá trị là % lên TextView
+            String mean = values[0];
             TextView textView = (TextView) contextParent.findViewById(R.id.txtWord);
             textView.setText(mean);
         }
