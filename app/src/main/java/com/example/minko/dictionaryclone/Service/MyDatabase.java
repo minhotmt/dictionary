@@ -49,18 +49,4 @@ public class MyDatabase extends SQLiteAssetHelper {
 
     }
 
-    public String getMeanByWord(String word) {
-        String mean = "";
-        SQLiteDatabase db = getReadableDatabase();
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        Cursor b = db.rawQuery("SELECT * FROM words WHERE word = '" + word + "'", null);
-        if (b.moveToFirst()) {
-            do {
-                mean = b.getString(b.getColumnIndex("definition"));
-            } while (b.moveToNext());
-        }
-        return mean;
-    }
-
-
 }

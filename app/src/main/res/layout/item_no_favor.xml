@@ -30,12 +30,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
         android:descendantFocusability="blocksDescendants"
         android:foregroundGravity="center_vertical"
         android:scaleX="0.7"
-        android:scaleY="0.7"
-        android:src="@drawable/ic_not_favorite" />
+        android:scaleY="0.7"/>
 
 </RelativeLayout>

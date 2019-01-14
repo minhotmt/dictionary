@@ -19,7 +19,7 @@ public class CustomAdapterSearch extends ArrayAdapter<Favorite> {
     Context mContext;
     private ArrayList<Favorite> dataSet;
     private int lastPosition = -1;
-
+    private Boolean status = false;
 
     public CustomAdapterSearch(ArrayList<Favorite> data, Context context) {
         super(context, R.layout.item_no_favor, data);
@@ -50,24 +50,24 @@ public class CustomAdapterSearch extends ArrayAdapter<Favorite> {
 
         lastPosition = position;
         final DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
+        final ArrayList<String> arr = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
 
         viewHolder.txtName.setText(dataModel.getName());
+        viewHolder.imgFavor.setImageResource(R.drawable.ic_not_favorite);
+
         viewHolder.imgFavor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolder.imgFavor.setImageResource(R.drawable.ic_favorited);
-                dbFavoriteManager.addFavorite(dataModel);
+                status = !status;
+                if (status) {
+                    viewHolder.imgFavor.setImageResource(R.drawable.ic_favorited);
+                    dbFavoriteManager.addFavorite(dataModel);
+                } else {
+                    viewHolder.imgFavor.setImageResource(R.drawable.ic_not_favorite);
+                    dbFavoriteManager.deleteFavoriteByName(dataModel.getName());
+                }
             }
         });
-
-
-        ArrayList<String> arr = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
-        for (String item: arr){
-            if (dataModel.equals(item)){
-                viewHolder.imgFavor.setImageResource(R.drawable.ic_favorited);
-            } else
-                viewHolder.imgFavor.setImageResource(R.drawable.ic_not_favorite);
-        }
 
         return convertView;
     }

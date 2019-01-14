@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.minko.dictionaryclone.Activity.MainActivity;
 import com.example.minko.dictionaryclone.Activity.MeanDetailActivity;
 import com.example.minko.dictionaryclone.Adapter.CustomAdapterSearch;
 import com.example.minko.dictionaryclone.Model.Favorite;
@@ -54,6 +53,7 @@ public class SearchFragment extends Fragment {
     private CustomAdapterSearch customAdapterSearch;
     private Button btnTest;
     private Context context;
+    private Boolean status = true;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -113,7 +113,6 @@ public class SearchFragment extends Fragment {
         });
         context = container.getContext();
 
-
         editText.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
@@ -125,17 +124,12 @@ public class SearchFragment extends Fragment {
                     }
                 }
 
-                ArrayList<Favorite> arr = new ArrayList<>();
-                for (Favorite favorite : suggest) {
-                    arr.add(favorite);
-                }
-
                 if (customAdapterSearch == null) {
-                    customAdapterSearch = new CustomAdapterSearch(arr, context);
+                    customAdapterSearch = new CustomAdapterSearch(suggest, context);
                     lstSearch.setAdapter(customAdapterSearch);
                 } else {
                     customAdapterSearch.clear();
-                    customAdapterSearch = new CustomAdapterSearch(arr, context);
+                    customAdapterSearch = new CustomAdapterSearch(suggest, context);
                     customAdapterSearch.notifyDataSetChanged();
                 }
                 if (editText.getText().toString().equals("")) {
@@ -159,6 +153,7 @@ public class SearchFragment extends Fragment {
                 Favorite favorite = (Favorite) parent.getItemAtPosition(position);
                 intent.putExtra("word", "" + favorite.getName());
                 intent.putExtra("mean", "" + favorite.getDifinition());
+                Toast.makeText(getActivity(), favorite.getStatus() + "", Toast.LENGTH_LONG).show();
                 getActivity().startActivity(intent);
             }
         });

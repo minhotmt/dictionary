@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/item_padding"
     android:layout_gravity="center_vertical">
 
     <TextView
+        android:paddingLeft="10dp"
         android:id="@+id/txt_favor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,12 +16,13 @@
         android:layout_marginTop="6dp"
         android:gravity="center"
         android:text="Hello"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="25sp" />
+        android:textColor="#444"
+        android:textSize="22sp" />
 
     <ImageView
-        android:scaleX="0.7"
-        android:scaleY="0.7"
+        android:paddingRight="10dp"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         android:src="@drawable/icon_delete"
         android:id="@+id/img_favor"
         android:layout_width="wrap_content"

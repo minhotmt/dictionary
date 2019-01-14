@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
 import com.example.minko.dictionaryclone.Service.DBHistoryManager;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
@@ -300,7 +299,7 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             //Hàm này thực hiện các tác vụ chạy ngầm
             //Tuyệt đối k vẽ giao diện trong hàm này
             String a = "";
-            if (status){
+            if (status) {
                 a = Translator(params[0]);
             } else a = TranslatorBack(params[0]);
             publishProgress(a);
