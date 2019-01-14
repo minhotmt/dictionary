@@ -47,6 +47,7 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
     private EditText edtText;
     private TextView txtWord;
     private ImageButton iconListen;
+    private Boolean status = true;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -92,6 +93,21 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
+    public static String TranslatorBack(String text) {
+        TranslateOptions options = TranslateOptions.newBuilder()
+                .setApiKey("AIzaSyCesRSQ_xOlB489lpIZvOxSBFRPv6a_lNk")
+                .build();
+        com.google.cloud.translate.Translate translate = options.getService();
+        try {
+            Translation translation = translate.translate(text, // dogings[0] = "dog"
+                    com.google.cloud.translate.Translate.TranslateOption.sourceLanguage("ru"),
+                    com.google.cloud.translate.Translate.TranslateOption.targetLanguage("en"));
+            return translation.getTranslatedText();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +142,7 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             public void onClick(View v) {
                 change(imageView1, txt1);
                 change(imageView2, txt2);
+                status = !status;
             }
         });
         iconListen.setOnClickListener(new View.OnClickListener() {
@@ -282,7 +299,10 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             //Hàm được được hiện tiếp sau hàm onPreExecute()
             //Hàm này thực hiện các tác vụ chạy ngầm
             //Tuyệt đối k vẽ giao diện trong hàm này
-            String a = Translator(params[0]);
+            String a = "";
+            if (status){
+                a = Translator(params[0]);
+            } else a = TranslatorBack(params[0]);
             publishProgress(a);
             return null;
         }

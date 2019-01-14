@@ -38,6 +38,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
     private View mView;
     private boolean wasInFocus = true;
     private TextToSpeech tts;
+    private Boolean status = true;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -263,6 +264,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
             public void onClick(View v) {
                 change(img1, tv1);
                 change(img2, tv2);
+                status = !status;
             }
         });
 
@@ -317,7 +319,11 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
     public class MyAsyncTask extends AsyncTask<String, String, Void> {
         @Override
         protected Void doInBackground(String... strings) {
-            String a = TranslatorFragment.Translator(strings[0]);
+            String a = "";
+            if (status){
+                a = TranslatorFragment.Translator(strings[0]);
+            } else a = TranslatorFragment.TranslatorBack(strings[0]);
+
             publishProgress(a);
 
             return null;
