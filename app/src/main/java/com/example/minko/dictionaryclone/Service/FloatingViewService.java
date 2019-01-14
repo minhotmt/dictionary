@@ -73,7 +73,6 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                 stopSelf();
             }
         });
-
     }
 
     @Override
@@ -98,12 +97,14 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
         //The root element of the expanded view layout
         final View expandedView = mView.findViewById(R.id.expanded_container);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        int width = (int) (metrics.widthPixels * 1f);
-        int height = (int) (metrics.heightPixels * 1f);
+        int width = (int) (metrics.widthPixels * 0.7f);
+        int height = (int) (metrics.heightPixels * 0.45f);
 
         mWindowsParams = new WindowManager.LayoutParams(
-                width,//WindowManager.LayoutParams.WRAP_CONTENT,
-                height,//WindowManager.LayoutParams.WRAP_CONTENT,
+//                width,//WindowManager.LayoutParams.WRAP_CONTENT,
+//                height,//WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
                 //WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
 
                 (Build.VERSION.SDK_INT <= 25) ? WindowManager.LayoutParams.TYPE_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -140,12 +141,12 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
             }
         });
         mWindowsParams.gravity = Gravity.TOP | Gravity.LEFT;
-        //params.x = 0;
+//        params.x = 0;
+        mWindowsParams.x = 0;
         mWindowsParams.y = 100;
         mWindowManager.addView(mView, mWindowsParams);
 
-        mView.setOnTouchListener(new View.OnTouchListener() {
-            long startTime = System.currentTimeMillis();
+        mView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
             private float initialTouchX;
@@ -153,14 +154,6 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (System.currentTimeMillis() - startTime <= 300) {
-                    return false;
-                }
-                if (isViewInBounds(mView, (int) (event.getRawX()), (int) (event.getRawY()))) {
-                    editTextReceiveFocus();
-                } else {
-                    editTextDontReceiveFocus();
-                }
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -172,8 +165,6 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                     case MotionEvent.ACTION_UP:
                         int Xdiff = (int) (event.getRawX() - initialTouchX);
                         int Ydiff = (int) (event.getRawY() - initialTouchY);
-
-
                         //The check for Xdiff <10 && YDiff< 10 because sometime elements moves a little while clicking.
                         //So that is click event.
                         if (Xdiff < 10 && Ydiff < 10) {
@@ -185,12 +176,12 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                                 expandedView.setVisibility(View.VISIBLE);
                             }
                         }
-                        break;
+                        return true;
                     case MotionEvent.ACTION_MOVE:
                         mWindowsParams.x = initialX + (int) (event.getRawX() - initialTouchX);
                         mWindowsParams.y = initialY + (int) (event.getRawY() - initialTouchY);
                         mWindowManager.updateViewLayout(mView, mWindowsParams);
-                        break;
+                        return false;
                 }
                 return false;
             }
