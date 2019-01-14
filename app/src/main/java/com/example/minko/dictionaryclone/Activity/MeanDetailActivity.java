@@ -35,16 +35,10 @@ public class MeanDetailActivity extends AppCompatActivity implements TextToSpeec
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Intent intent = getIntent();
         word = intent.getStringExtra("word");
+        mean = intent.getStringExtra("mean");
         TextView txtWord = findViewById(R.id.txtWord);
         TextView txtMean = findViewById(R.id.txtMean);
         ImageButton imgListen = findViewById(R.id.imgListen);
-        myDatabase = new MyDatabase(getApplicationContext());
-        lstFavorite = myDatabase.getAllWord();
-        for (Favorite item : lstFavorite) {
-            if (word.equals(item.getName())) {
-                mean = item.getDifinition();
-            }
-        }
         txtMean.setText(mean);
         txtWord.setText(word);
         tts = new TextToSpeech(getApplicationContext(), this);

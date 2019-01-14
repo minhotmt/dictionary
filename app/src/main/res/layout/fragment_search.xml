@@ -35,7 +35,7 @@
     <ListView
         android:id="@+id/lstSearch"
         android:layout_width="match_parent"
-        android:layout_height="506dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/edtText"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"

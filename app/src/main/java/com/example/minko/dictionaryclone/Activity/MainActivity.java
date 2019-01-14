@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -28,8 +29,10 @@ import com.example.minko.dictionaryclone.Fragment.NounFragment;
 import com.example.minko.dictionaryclone.Fragment.SearchFragment;
 import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
 import com.example.minko.dictionaryclone.Fragment.WebFragment;
+import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.FloatingViewService;
+import com.example.minko.dictionaryclone.Service.MyDatabase;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -82,8 +85,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setDefaultFragment() {
+        SearchFragment searchFragment = new SearchFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fr_child, new SearchFragment());
+        fragmentTransaction.replace(R.id.fr_child, searchFragment);
         fragmentTransaction.commit();
 
     }

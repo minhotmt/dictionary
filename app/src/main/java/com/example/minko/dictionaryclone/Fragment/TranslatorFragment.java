@@ -21,7 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
+import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
+import com.example.minko.dictionaryclone.Service.DBHistoryManager;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 
@@ -134,7 +137,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
 
         tts = new TextToSpeech(getContext(), this);
         edtText = view.findViewById(R.id.edtText);
-//        myAsyncTask = new MyAsyncTask(getActivity());
         edtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -155,6 +157,8 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
             }
 
         });
+        final DBHistoryManager dbFavoriteManager = new DBHistoryManager(getContext());
+        final Favorite favorite = new Favorite();
 
         edtText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -163,6 +167,8 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     new MyAsyncTask(getActivity()).execute(edtText.getText().toString());
+                    favorite.setName(edtText.getText().toString());
+                    dbFavoriteManager.addHistory(favorite);
                     return true;
                 }
                 return false;

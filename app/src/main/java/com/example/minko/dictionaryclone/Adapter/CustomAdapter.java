@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.minko.dictionaryclone.Model.Nouns;
@@ -33,6 +34,7 @@ public class CustomAdapter extends ArrayAdapter<Nouns> {
             convertView = LayoutInflater.from(context).inflate(R.layout.row, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.txtTitle);
+            viewHolder.imgIcon = convertView.findViewById(R.id.imgIcon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -44,6 +46,6 @@ public class CustomAdapter extends ArrayAdapter<Nouns> {
 
     public class ViewHolder {
         TextView tvName;
-
+        ImageView imgIcon;
     }
 }

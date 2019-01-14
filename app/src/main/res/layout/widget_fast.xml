@@ -39,13 +39,13 @@
         </RelativeLayout>
         <!--View while view is expanded-->
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/expanded_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:visibility="gone">
             <!--Album image for the song currently playing.-->
             <ImageView
                 android:id="@+id/close_button"
@@ -118,6 +118,7 @@
                     android:focusableInTouchMode="true">
                     <!-- TODO: Update blank fragment layout -->
                     <EditText
+                        android:textColor="@color/colorPrimaryDark"
                         android:id="@+id/edtText"
                         android:layout_width="match_parent"
                         android:layout_height="65sp"
@@ -149,6 +150,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/colorPrimaryDark"
                         android:id="@+id/txtWord"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -166,7 +168,8 @@
                         android:padding="@dimen/item_padding"
                         android:scaleX="0.7"
                         android:scaleY="0.7"
-                        android:src="@drawable/icon_listen" />
+                        android:src="@drawable/icon_listen"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
 

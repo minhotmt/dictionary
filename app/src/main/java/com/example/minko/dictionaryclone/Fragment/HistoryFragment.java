@@ -11,8 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.example.minko.dictionaryclone.Adapter.CustomAdapterFavorite;
+import com.example.minko.dictionaryclone.Adapter.CustomAdapterHistory;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
+import com.example.minko.dictionaryclone.Service.DBHistoryManager;
 
 import java.util.ArrayList;
 
@@ -31,6 +34,8 @@ public class HistoryFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private ListView lstHistory;
     private ArrayAdapter<String> mAdapter;
+    private CustomAdapterHistory customAdapterHistory;
+    Context context;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,20 +82,19 @@ public class HistoryFragment extends Fragment {
 
         lstHistory = view.findViewById(R.id.lst_history);
 
-        ArrayList<String> favoriteList = new ArrayList<>();
-        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-        favoriteList = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
+        ArrayList<String> historys = new ArrayList<>();
+        DBHistoryManager dbHistoryManager = new DBHistoryManager(getContext());
+        historys = (ArrayList<String>) dbHistoryManager.getAllFavoriteString();
+        context = container.getContext();
         if (mAdapter == null) {
-            mAdapter = new ArrayAdapter<>(getActivity(),
-                    R.layout.item_history,
-                    R.id.txt_favor,
-                    favoriteList);
+            mAdapter = new CustomAdapterHistory(historys, context);
             lstHistory.setAdapter(mAdapter);
         } else {
             mAdapter.clear();
-            mAdapter.addAll(favoriteList);
+            mAdapter = new CustomAdapterHistory(historys, context);
             mAdapter.notifyDataSetChanged();
         }
+        lstHistory.setAdapter(mAdapter);
         return view;
 
     }

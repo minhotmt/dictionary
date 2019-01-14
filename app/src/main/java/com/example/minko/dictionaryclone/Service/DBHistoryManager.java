@@ -11,17 +11,17 @@ import com.example.minko.dictionaryclone.Model.History;
 
 import java.util.ArrayList;
 import java.util.List;
-public class DBFavoriteManager extends SQLiteOpenHelper {
+public class DBHistoryManager extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME ="Favorite_list";
-    private static final String TABLE_NAME ="favorite";
+    public static final String DATABASE_NAME ="History_list";
+    private static final String TABLE_NAME ="history";
     private static final String ID ="id";
     private static final String NAME ="name";
 
 
     private Context context;
 
-    public DBFavoriteManager(Context context) {
+    public DBHistoryManager(Context context) {
         super(context, DATABASE_NAME,null, 1);
         Log.d("DBManager", "DBManager: ");
         this.context = context;
@@ -42,7 +42,7 @@ public class DBFavoriteManager extends SQLiteOpenHelper {
     }
 
     //Add new a Favorite
-    public void addFavorite(Favorite favorite){
+    public void addHistory(Favorite favorite){
         Boolean check = false;
         List<String> lst = this.getAllFavoriteString();
         for (String item: lst){

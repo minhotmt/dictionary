@@ -7,14 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.minko.dictionaryclone.Adapter.CustomAdapterFavorite;
 import com.example.minko.dictionaryclone.R;
 import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
+
 import java.util.ArrayList;
 
 /**
@@ -32,7 +32,9 @@ public class FavoriteFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private ListView mFovListView;
-    private ArrayAdapter<String> mAdapter;
+    private CustomAdapterFavorite mAdapter;
+    private Context context;
+    private ArrayAdapter<String> arrayAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,35 +79,19 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         mFovListView = view.findViewById(R.id.lst_favor);
         ImageView imgFavor = view.findViewById(R.id.img_favor);
-        ArrayList<String> favoriteList = new ArrayList<>();
         DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-        favoriteList = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
+        ArrayList<String> arr = (ArrayList<String>) dbFavoriteManager.getAllFavoriteString();
+
+        context = container.getContext();
         if (mAdapter == null) {
-            mAdapter = new ArrayAdapter<>(getActivity(),
-                    R.layout.item_favor,
-                    R.id.txt_favor,
-                    favoriteList);
+            mAdapter = new CustomAdapterFavorite(arr, context);
             mFovListView.setAdapter(mAdapter);
         } else {
             mAdapter.clear();
-            mAdapter.addAll(favoriteList);
+            mAdapter = new CustomAdapterFavorite(arr, context);
             mAdapter.notifyDataSetChanged();
         }
-        mFovListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-                ImageView iconfavor = view.findViewById(R.id.img_favor);
-                //same for image and any widgetn your adapter layout xml
-                iconfavor.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View arg0) {
-                        //do what u want
-                        Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-                        dbFavoriteManager.deleteFavoriteByName(""+parent.getItemAtPosition(position));
-                    }
-                });
-            }
-        });
+        mFovListView.setAdapter(mAdapter);
         return view;
     }
 
@@ -147,13 +133,5 @@ public class FavoriteFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void deleteFavorite(View view) {
-        View parent = (View) view.getParent();
-        TextView favoriteTextView = (TextView) parent.findViewById(R.id.txt_favor);
-        String favorite = String.valueOf(favoriteTextView.getText());
-        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-        dbFavoriteManager.deleteFavoriteByName(favorite);
     }
 }

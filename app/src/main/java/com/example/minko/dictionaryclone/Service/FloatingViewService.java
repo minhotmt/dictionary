@@ -32,7 +32,7 @@ import com.example.minko.dictionaryclone.R;
 
 public class FloatingViewService extends Service implements TextToSpeech.OnInitListener {
 
-    WindowManager.LayoutParams mWindowsParams;
+    WindowManager.LayoutParams mWindowsParams, params;
     private Context mContext;
     private WindowManager mWindowManager;
     private View mView;
@@ -98,8 +98,8 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
         //The root element of the expanded view layout
         final View expandedView = mView.findViewById(R.id.expanded_container);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        int width = (int) (metrics.widthPixels * 0.7f);
-        int height = (int) (metrics.heightPixels * 0.45f);
+        int width = (int) (metrics.widthPixels * 1f);
+        int height = (int) (metrics.heightPixels * 1f);
 
         mWindowsParams = new WindowManager.LayoutParams(
                 width,//WindowManager.LayoutParams.WRAP_CONTENT,
@@ -168,7 +168,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                         initialY = mWindowsParams.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
-                        break;
+                        return true;
                     case MotionEvent.ACTION_UP:
                         int Xdiff = (int) (event.getRawX() - initialTouchX);
                         int Ydiff = (int) (event.getRawY() - initialTouchY);
@@ -279,6 +279,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
             @Override
             public void onClick(View v) {
                 edtWord.setText("");
+                tvMean.setText("");
             }
         });
 

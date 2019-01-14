@@ -18,19 +18,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.minko.dictionaryclone.Activity.MainActivity;
 import com.example.minko.dictionaryclone.Activity.MeanDetailActivity;
+import com.example.minko.dictionaryclone.Adapter.CustomAdapterSearch;
 import com.example.minko.dictionaryclone.Model.Favorite;
 import com.example.minko.dictionaryclone.R;
-import com.example.minko.dictionaryclone.Service.DBFavoriteManager;
 import com.example.minko.dictionaryclone.Service.MyDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
@@ -53,7 +51,9 @@ public class SearchFragment extends Fragment {
     private MyDatabase db;
     private ArrayList<Favorite> lstFavortite;
     private ArrayAdapter<String> mAdapter;
+    private CustomAdapterSearch customAdapterSearch;
     private Button btnTest;
+    private Context context;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -92,18 +92,18 @@ public class SearchFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db = new MyDatabase(getActivity());
+        lstFavortite = db.getAllWord();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search,
                 container, false);
 
         ImageButton image = view.findViewById(R.id.imgSearch);
         final ListView lstSearch = view.findViewById(R.id.lstSearch);
-//        final ImageView iconFavor = view.findViewById(R.id.icon_favor);
-//        TextView txtResult = view.findViewById(R.id.txt_result);
         final EditText editText = view.findViewById(R.id.edtText);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,53 +111,37 @@ public class SearchFragment extends Fragment {
                 startVoiceInput();
             }
         });
-//        iconFavor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                iconFavor.setImageResource(R.drawable.ic_favorited);
-//                DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-//                TextView txtResult = getView().findViewById(R.id.txt_result);
-//                Favorite favorite = new Favorite(1, txtResult.getText().toString());
-//                dbFavoriteManager.addFavorite(favorite);
-//            }
-//        });
-//        if (txtResult.getText().toString().equals("")) {
-//            iconFavor.setVisibility(View.INVISIBLE);
-//        }
+        context = container.getContext();
 
-        db = new MyDatabase(getActivity());
-        lstFavortite = db.getAllWord();
-        ArrayList<String> arr = new ArrayList<>();
-        for (Favorite favorite : lstFavortite) {
-            arr.add(favorite.getName());
-        }
 
         editText.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
                 ListView lstSearch = getView().findViewById(R.id.lstSearch);
-                List<Favorite> suggest = new ArrayList<>();
+                ArrayList<Favorite> suggest = new ArrayList<>();
                 for (Favorite favorite : lstFavortite) {
                     if (favorite.getName().startsWith(editText.getText().toString().toLowerCase())) {
                         suggest.add(favorite);
                     }
                 }
-                ArrayList<String> arr = new ArrayList<>();
+
+                ArrayList<Favorite> arr = new ArrayList<>();
                 for (Favorite favorite : suggest) {
-                    arr.add(favorite.getName());
+                    arr.add(favorite);
                 }
-                if (mAdapter == null) {
-                    mAdapter = new ArrayAdapter<>(getActivity(),
-                            R.layout.item_no_favor,
-                            R.id.txt_favor,
-                            arr);
-                    lstSearch.setAdapter(mAdapter);
+
+                if (customAdapterSearch == null) {
+                    customAdapterSearch = new CustomAdapterSearch(arr, context);
+                    lstSearch.setAdapter(customAdapterSearch);
                 } else {
-                    mAdapter.clear();
-                    mAdapter.addAll(arr);
-                    mAdapter.notifyDataSetChanged();
+                    customAdapterSearch.clear();
+                    customAdapterSearch = new CustomAdapterSearch(arr, context);
+                    customAdapterSearch.notifyDataSetChanged();
                 }
-                lstSearch.setAdapter(mAdapter);
+                if (editText.getText().toString().equals("")) {
+                    customAdapterSearch.clear();
+                }
+                lstSearch.setAdapter(customAdapterSearch);
             }
 
             public void beforeTextChanged(CharSequence arg0, int arg1,
@@ -170,33 +154,12 @@ public class SearchFragment extends Fragment {
 
         lstSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-//                Button btnTest = view.findViewById(R.id.btnTest);
-//                btnTest.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Toast.makeText(getContext(), "CLik ngay", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), MeanDetailActivity.class);
-                intent.putExtra("word", "" + parent.getItemAtPosition(position).toString());
+                Favorite favorite = (Favorite) parent.getItemAtPosition(position);
+                intent.putExtra("word", "" + favorite.getName());
+                intent.putExtra("mean", "" + favorite.getDifinition());
                 getActivity().startActivity(intent);
-                ImageView iconfavor = view.findViewById(R.id.img_favor);
-                //same for image and any widgetn your adapter layout xml
-                iconfavor.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View arg0) {
-                        //do what u want
-                        Toast.makeText(getContext(), "Favorited", Toast.LENGTH_SHORT).show();
-//                        ImageView iconFavor = getView().findViewById(R.id.icon_favor);
-//                        iconFavor.setImageResource(R.drawable.ic_favorited);
-                        DBFavoriteManager dbFavoriteManager = new DBFavoriteManager(getContext());
-                        Favorite favorite = new Favorite("" + parent.getItemAtPosition(position));
-                        dbFavoriteManager.addFavorite(favorite);
-                    }
-                });
-
             }
         });
 
@@ -233,11 +196,7 @@ public class SearchFragment extends Fragment {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     talk = result.get(0);
                     EditText editText = getView().findViewById(R.id.edtText);
-//                    TextView txtResult = getView().findViewById(R.id.txt_result);
-//                    ImageView iconFavor = getView().findViewById(R.id.icon_favor);
                     editText.setText(result.get(0));
-//                    txtResult.setText(result.get(0));
-//                    iconFavor.setVisibility(View.VISIBLE);
                 }
                 break;
             }
@@ -260,6 +219,8 @@ public class SearchFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+
     }
 
     @Override
