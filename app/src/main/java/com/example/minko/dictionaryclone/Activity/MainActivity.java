@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void sendFeedBack() {
         try {
-
+            int i = 3/0;
         } catch (Exception e) {
             ApplicationErrorReport report = new ApplicationErrorReport();
             report.packageName = report.processName = getApplication().getPackageName();
