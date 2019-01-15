@@ -29,8 +29,9 @@
             android:src="@drawable/ic_england" />
 
         <TextView
+            android:textStyle="bold"
             android:id="@+id/txt1"
-            android:layout_width="74dp"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -39,7 +40,6 @@
             android:layout_marginStart="81dp"
             android:layout_marginLeft="81dp"
             android:layout_marginTop="9dp"
-            android:layout_marginEnd="17dp"
             android:layout_marginRight="17dp"
             android:layout_toStartOf="@+id/imgChange"
             android:layout_toLeftOf="@+id/imgChange"
@@ -54,11 +54,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:background="@color/white"
             android:src="@drawable/icon_change" />
 
         <TextView
+            android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/txt2"
             android:layout_width="wrap_content"
@@ -103,6 +104,7 @@
             android:layout_height="63sp"
             android:hint="@string/hint_search"/>
         <ImageButton
+            android:visibility="gone"
             android:scaleX="0.7"
             android:scaleY="0.7"
             android:paddingRight="5sp"
@@ -115,17 +117,27 @@
             android:scaleType="fitCenter"
             android:src="@drawable/icon_delete" />
 
+        <View
+            android:id="@+id/view2"
+            android:layout_width="wrap_content"
+            android:layout_height="1sp"
+            android:background="@color/color_orange"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
     </RelativeLayout>
-    <!--<view-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1sp"-->
-        <!--android:background="@color/color_orange"/>-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:paddingLeft="10sp"
+            android:layout_marginLeft="6sp"
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/txtWord"
             android:layout_width="match_parent"
@@ -142,11 +154,10 @@
             android:layout_gravity="right"
             android:background="@null"
             android:foregroundGravity="right"
-            android:padding="@dimen/item_padding"
             android:paddingTop="10sp"
             android:scaleType="fitCenter"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
             android:src="@drawable/icon_listen" />
     </LinearLayout>
 

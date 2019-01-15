@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -24,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.minko.dictionaryclone.Activity.MainActivity;
@@ -32,11 +32,11 @@ import com.example.minko.dictionaryclone.R;
 
 public class FloatingViewService extends Service implements TextToSpeech.OnInitListener {
 
-    WindowManager.LayoutParams mWindowsParams, params;
+    WindowManager.LayoutParams mWindowsParams;
+    ProgressBar progressbar;
     private Context mContext;
     private WindowManager mWindowManager;
     private View mView;
-    private boolean wasInFocus = true;
     private TextToSpeech tts;
     private Boolean status = true;
 
@@ -62,7 +62,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
         });
 
         //Open the application on thi button click
-        Button openButton = (Button) mView.findViewById(R.id.open_button);
+        Button openButton = mView.findViewById(R.id.open_button);
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +74,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                 stopSelf();
             }
         });
+        progressbar = mView.findViewById(R.id.progressBar1);
     }
 
     @Override
@@ -98,20 +99,19 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
         //The root element of the expanded view layout
         final View expandedView = mView.findViewById(R.id.expanded_container);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        int width = (int) (metrics.widthPixels * 0.7f);
-        int height = (int) (metrics.heightPixels * 0.45f);
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
 
         mWindowsParams = new WindowManager.LayoutParams(
-//                width,//WindowManager.LayoutParams.WRAP_CONTENT,
-//                height,//WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 //WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-
-                (Build.VERSION.SDK_INT <= 25) ? WindowManager.LayoutParams.TYPE_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                //WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, // Not displaying keyboard on bg activity's EditText
-                //WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, //Not work with EditText on keyboard
                 PixelFormat.TRANSLUCENT);
         ImageView closeButton = mView.findViewById(R.id.close_button);
         ImageView closeButtonCollapsed = mView.findViewById(R.id.close_btn);
@@ -129,7 +129,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                 expandedView.setVisibility(View.GONE);
             }
         });
-        Button openButton = (Button) mView.findViewById(R.id.open_button);
+        Button openButton = mView.findViewById(R.id.open_button);
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +142,6 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
             }
         });
         mWindowsParams.gravity = Gravity.TOP | Gravity.LEFT;
-//        params.x = 0;
         mWindowsParams.x = 0;
         mWindowsParams.y = 100;
         mWindowManager.addView(mView, mWindowsParams);
@@ -189,33 +188,8 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
         });
     }
 
-    private boolean isViewInBounds(View view, int x, int y) {
-        Rect outRect = new Rect();
-        int[] location = new int[2];
-        view.getDrawingRect(outRect);
-        view.getLocationOnScreen(location);
-        outRect.offset(location[0], location[1]);
-        return outRect.contains(x, y);
-    }
-
-    private void editTextReceiveFocus() {
-        if (!wasInFocus) {
-            mWindowsParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-            mWindowManager.updateViewLayout(mView, mWindowsParams);
-            wasInFocus = true;
-        }
-    }
-
     private boolean isViewCollapsed() {
         return mView == null || mView.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
-    }
-
-    private void editTextDontReceiveFocus() {
-        if (wasInFocus) {
-            mWindowsParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-            mWindowManager.updateViewLayout(mView, mWindowsParams);
-            wasInFocus = false;
-        }
     }
 
     private void allAboutLayout(Intent intent) {
@@ -282,6 +256,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    imgReset.setVisibility(View.VISIBLE);
                     //Translate api
                     new MyAsyncTask().execute(edtWord.getText().toString());
                     imgListen.setOnClickListener(new View.OnClickListener() {
@@ -317,15 +292,20 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
     }
 
     public class MyAsyncTask extends AsyncTask<String, String, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            progressbar = mView.findViewById(R.id.progressBar1);
+            progressbar.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected Void doInBackground(String... strings) {
             String a = "";
-            if (status){
+            if (status) {
                 a = TranslatorFragment.Translator(strings[0]);
             } else a = TranslatorFragment.TranslatorBack(strings[0]);
-
             publishProgress(a);
-
             return null;
         }
 
@@ -335,6 +315,7 @@ public class FloatingViewService extends Service implements TextToSpeech.OnInitL
             String mean = values[0];
             TextView textView = mView.findViewById(R.id.txtWord);
             textView.setText(mean);
+            progressbar.setVisibility(View.INVISIBLE);
         }
 
     }

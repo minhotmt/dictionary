@@ -153,7 +153,6 @@ public class SearchFragment extends Fragment {
                 Favorite favorite = (Favorite) parent.getItemAtPosition(position);
                 intent.putExtra("word", "" + favorite.getName());
                 intent.putExtra("mean", "" + favorite.getDifinition());
-                Toast.makeText(getActivity(), favorite.getStatus() + "", Toast.LENGTH_LONG).show();
                 getActivity().startActivity(intent);
             }
         });

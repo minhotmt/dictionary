@@ -160,6 +160,7 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                iconDelete.setVisibility(View.VISIBLE);
                 if (!edtText.getText().toString().equals("")) {
                     iconListen.setVisibility(View.VISIBLE);
                 } else {

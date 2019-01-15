@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="70sp">
+                android:paddingBottom="50sp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -139,6 +139,7 @@
                         android:scrollHorizontally="true" />
 
                     <ImageButton
+                        android:visibility="gone"
                         android:id="@+id/imgReset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -162,6 +163,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textStyle="bold"
                         android:textColor="@color/colorPrimaryDark"
                         android:id="@+id/txtWord"
                         android:layout_width="match_parent"
@@ -169,7 +171,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:padding="@dimen/item_padding"
-                        android:paddingLeft="15sp"
+                        android:layout_marginLeft="8sp"
                         android:textSize="@dimen/txt_big" />
 
                     <ImageButton
@@ -183,8 +185,18 @@
                         android:src="@drawable/icon_listen"
                         android:visibility="gone" />
                 </LinearLayout>
+                <ProgressBar
+                    android:scaleX="0.6"
+                    android:scaleY="0.6"
+                    android:visibility="gone"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:id="@+id/progressBar1"
+                    style="?android:attr/progressBarStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"/>
             </LinearLayout>
-
             <Button
                 android:textStyle="bold"
                 android:id="@+id/open_button"
