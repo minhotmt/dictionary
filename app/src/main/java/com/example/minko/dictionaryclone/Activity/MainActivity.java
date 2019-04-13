@@ -23,7 +23,6 @@ import android.view.MenuItem;
 
 import com.example.minko.dictionaryclone.Fragment.FavoriteFragment;
 import com.example.minko.dictionaryclone.Fragment.HistoryFragment;
-import com.example.minko.dictionaryclone.Fragment.HomeFragment;
 import com.example.minko.dictionaryclone.Fragment.NounFragment;
 import com.example.minko.dictionaryclone.Fragment.SearchFragment;
 import com.example.minko.dictionaryclone.Fragment.TranslatorFragment;
@@ -37,10 +36,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        SearchFragment.OnFragmentInteractionListener, HistoryFragment.OnFragmentInteractionListener,
-        FavoriteFragment.OnFragmentInteractionListener, TranslatorFragment.OnFragmentInteractionListener,
-        NounFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
-        WebFragment.OnFragmentInteractionListener, BottomNavigationView.OnNavigationItemSelectedListener {
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
     private DrawerLayout mDrawerLayout;
@@ -66,19 +62,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //Check if the application has draw over other apps permission or not?
-        //This permission is by default available for API<23. But for API > 23
-        //you have to ask for the permission in runtime.
+        checkPermissionUser();
+        setDefaultFragment();
+    }
+
+    private void checkPermissionUser() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            //If the draw over permission is not available open the settings screen
-            //to grant the permission.
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
         } else {
             initializeView();
         }
-        setDefaultFragment();
     }
 
     private void setDefaultFragment() {
@@ -93,10 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         defaultBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -316,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void sendFeedBack() {
         try {
-            int i = 3/0;
+            int i = 3 / 0;
         } catch (Exception e) {
             ApplicationErrorReport report = new ApplicationErrorReport();
             report.packageName = report.processName = getApplication().getPackageName();

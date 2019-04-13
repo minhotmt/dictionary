@@ -18,10 +18,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MeanDetailActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
-    MyDatabase myDatabase;
     private TextToSpeech tts;
     private String word;
-    private ArrayList<Favorite> lstFavorite;
     private String mean;
 
     @Override
@@ -29,7 +27,7 @@ public class MeanDetailActivity extends AppCompatActivity implements TextToSpeec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mean_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

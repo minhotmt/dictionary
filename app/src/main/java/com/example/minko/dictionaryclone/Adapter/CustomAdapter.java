@@ -33,7 +33,7 @@ public class CustomAdapter extends ArrayAdapter<Nouns> {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.row, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.tvName = (TextView) convertView.findViewById(R.id.txtTitle);
+            viewHolder.tvName = convertView.findViewById(R.id.txtTitle);
             viewHolder.imgIcon = convertView.findViewById(R.id.imgIcon);
             convertView.setTag(viewHolder);
         } else {

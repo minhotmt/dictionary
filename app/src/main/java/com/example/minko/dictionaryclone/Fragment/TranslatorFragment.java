@@ -2,7 +2,6 @@ package com.example.minko.dictionaryclone.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -29,17 +28,7 @@ import com.google.cloud.translate.Translation;
 
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TranslatorFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TranslatorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private TextToSpeech tts;
@@ -48,26 +37,10 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
     private ImageButton iconListen;
     private Boolean status = true;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-//    private MyAsyncTask myAsyncTask;
-
     public TranslatorFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TranslatorFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static TranslatorFragment newInstance(String param1, String param2) {
         TranslatorFragment fragment = new TranslatorFragment();
         Bundle args = new Bundle();
@@ -111,8 +84,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -205,29 +176,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public void onInit(int status) {
@@ -262,25 +210,9 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     public class MyAsyncTask extends AsyncTask<String, String, Void> {
 
         Activity contextParent;
-//        EditText edtWord;
 
         public MyAsyncTask(Activity contextParent) {
             this.contextParent = contextParent;
@@ -289,16 +221,10 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //Hàm này sẽ chạy đầu tiên khi AsyncTask này được gọi
-            //Ở đây mình sẽ thông báo quá trình load bắt đâu "Start"
-//            Toast.makeText(contextParent, "Start", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            //Hàm được được hiện tiếp sau hàm onPreExecute()
-            //Hàm này thực hiện các tác vụ chạy ngầm
-            //Tuyệt đối k vẽ giao diện trong hàm này
             String a = "";
             if (status) {
                 a = Translator(params[0]);
@@ -309,15 +235,7 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
 
         @Override
         protected void onProgressUpdate(String... values) {
-            //Hàm thực hiện update giao diện khi có dữ liệu từ hàm doInBackground gửi xuống
             super.onProgressUpdate(values);
-            //Thông qua contextCha để lấy được control trong MainActivity
-//            ProgressBar progressBar = (ProgressBar) contextParent.findViewById(R.id.prbDemo);
-            //vì publishProgress chỉ truyền 1 đối số
-            //nên mảng values chỉ có 1 phần tử
-            //tăng giá trị của Progressbar lên
-//            progressBar.setProgress(number);
-            //đồng thời hiện thị giá trị là % lên TextView
             String mean = values[0];
             TextView textView = (TextView) contextParent.findViewById(R.id.txtWord);
             textView.setText(mean);
@@ -326,9 +244,6 @@ public class TranslatorFragment extends Fragment implements TextToSpeech.OnInitL
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //Hàm này được thực hiện khi tiến trình kết thúc
-            //Ở đây mình thông báo là đã "Finshed" để người dùng biết
-            //Toast.makeText(contextParent, "Okie, Finished", Toast.LENGTH_SHORT).show();
         }
     }
 }
