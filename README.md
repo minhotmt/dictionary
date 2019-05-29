@@ -1,2 +1,2 @@
 # dictionary
-Demo Clone app
+Russian Dictionary
